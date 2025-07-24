@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:background="#F0F2F5"
     android:padding="16dp"
-    tools:context=".main.MainActivity"> <!-- Perbarui: tools:context sesuai package .main -->
+    tools:context=".MainActivity"> <!-- Perbarui: tools:context sesuai package .main -->
 
     <ImageView
         android:id="@+id/ivLogo"
