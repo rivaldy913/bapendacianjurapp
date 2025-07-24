@@ -1,7 +1,4 @@
-// File ini akan menjadi halaman Pendaftaran Akun Baru.
-// Menggunakan XML layout (activity_register.xml) untuk tampilan UI.
-// Mengintegrasikan Firebase Authentication untuk pendaftaran email/password.
-
+// --- RegisterActivity.kt ---
 package com.example.bapendacjrapp.main
 
 import android.annotation.SuppressLint
@@ -11,31 +8,33 @@ import android.widget.EditText
 import android.widget.ImageView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import com.example.bapendacjrapp.R // Perbarui: Import R dari package root
+import com.example.bapendacjrapp.R
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.ktx.firestore
+import java.util.Date
 
 class RegisterActivity : AppCompatActivity() {
 
     private lateinit var auth: FirebaseAuth
+    private lateinit var db: FirebaseFirestore
 
     @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_register)
 
-        // Inisialisasi Firebase Auth
         auth = Firebase.auth
+        db = Firebase.firestore
 
-        // Menginisialisasi komponen UI
         val etEmail = findViewById<EditText>(R.id.etRegisterEmail)
         val etPassword = findViewById<EditText>(R.id.etRegisterPassword)
         val etConfirmPassword = findViewById<EditText>(R.id.etRegisterConfirmPassword)
         val btnRegister = findViewById<Button>(R.id.btnRegisterAccount)
         val ivBack = findViewById<ImageView>(R.id.ivRegisterBack)
 
-        // Listener untuk tombol Daftar Akun
         btnRegister.setOnClickListener {
             val email = etEmail.text.toString().trim()
             val password = etPassword.text.toString().trim()
@@ -56,23 +55,38 @@ class RegisterActivity : AppCompatActivity() {
                 return@setOnClickListener
             }
 
-            // Lakukan pendaftaran dengan Firebase Authentication
             auth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this) { task ->
                     if (task.isSuccessful) {
-                        // Pendaftaran berhasil
-                        Toast.makeText(this, "Pendaftaran berhasil! Silakan Login.", Toast.LENGTH_LONG).show()
-                        finish() // Kembali ke halaman Login (MainActivity)
+                        val userId = auth.currentUser?.uid
+                        if (userId != null) {
+                            val user = hashMapOf(
+                                "email" to email,
+                                "role" to "user",
+                                "createdAt" to Date()
+                            )
+                            db.collection("users").document(userId)
+                                .set(user)
+                                .addOnSuccessListener {
+                                    Toast.makeText(this, "Pendaftaran berhasil! Silakan Login.", Toast.LENGTH_LONG).show()
+                                    finish()
+                                }
+                                .addOnFailureListener { e ->
+                                    Toast.makeText(this, "Pendaftaran berhasil di Auth, tapi gagal menyimpan data user di Firestore: ${e.message}", Toast.LENGTH_LONG).show()
+                                    finish()
+                                }
+                        } else {
+                            Toast.makeText(this, "Pendaftaran berhasil, tetapi user ID tidak ditemukan.", Toast.LENGTH_LONG).show()
+                            finish()
+                        }
                     } else {
-                        // Pendaftaran gagal
                         Toast.makeText(this, "Pendaftaran gagal: ${task.exception?.message}", Toast.LENGTH_LONG).show()
                     }
                 }
         }
 
-        // Listener untuk tombol kembali
         ivBack.setOnClickListener {
-            onBackPressedDispatcher.onBackPressed() // Kembali ke Activity sebelumnya
+            onBackPressedDispatcher.onBackPressed()
         }
     }
 }

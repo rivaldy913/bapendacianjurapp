@@ -7,7 +7,6 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.bapendacjrapp.R
-import com.example.bapendacjrapp.main.ArtikelAdapter.ViewHolder
 
 class BeritaPengumumanAdapter(
     private val items: List<BeritaPengumumanItem>,
@@ -29,7 +28,17 @@ class BeritaPengumumanAdapter(
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = items[position]
-        holder.imageView.setImageResource(item.imageUrl)
+
+        // Memuat gambar dari String (nama drawable) menggunakan getIdentifier
+        val imageResId = holder.itemView.context.resources.getIdentifier(
+            item.imageUrl, "drawable", holder.itemView.context.packageName
+        )
+        if (imageResId != 0) {
+            holder.imageView.setImageResource(imageResId)
+        } else {
+            holder.imageView.setImageResource(R.drawable.placeholder_news_image)
+        }
+
         holder.titleView.text = item.title
         holder.dateCategoryView.text = "${item.date} | ${item.category}"
         holder.descriptionView.text = item.description
