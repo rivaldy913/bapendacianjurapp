@@ -1,0 +1,55 @@
+<!-- Layout generik untuk halaman detail (Profil, Jenis Pajak, Berita, Artikel, Edit Profil) -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="#F0F2F5"
+    tools:context=".main.DetailActivity">
+
+    <!-- Toolbar kustom untuk judul dan tombol kembali -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="#007BFF"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp">
+
+        <ImageView
+            android:id="@+id/ivBack"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:src="@drawable/ic_arrow_back_white"
+            android:contentDescription="Kembali"
+            android:clickable="true"
+            android:focusable="true" />
+
+        <TextView
+            android:id="@+id/tvDetailTitle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginStart="16dp"
+            android:text="Judul Halaman"
+            android:textColor="@android:color/white"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+    </LinearLayout>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="16dp">
+
+        <TextView
+            android:id="@+id/tvDetailContent"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Konten detail halaman akan ditampilkan di sini."
+            android:textColor="#333333"
+            android:textSize="16sp"
+            android:lineSpacingExtra="4dp" />
+    </ScrollView>
+</LinearLayout>

@@ -1,0 +1,307 @@
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#F0F2F5"
+    android:clipToPadding="false"
+    tools:context=".HomeActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <!-- Header Selamat Datang -->
+        <TextView
+            android:id="@+id/tvWelcome"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:text="Selamat Datang di Aplikasi Bapenda Cianjur"
+            android:textColor="#333333"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:textAlignment="center" />
+
+        <TextView
+            android:id="@+id/tvDescription"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="Informasi dan layanan pengelolaan pendapatan daerah Kabupaten Cianjur."
+            android:textColor="#666666"
+            android:textSize="14sp"
+            android:textAlignment="center" />
+
+        <!-- Berita -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:text="Berita Terbaru"
+            android:textColor="#333333"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvBerita"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:nestedScrollingEnabled="false"
+            tools:listitem="@layout/item_berita_pengumuman"
+            tools:ignore="MissingConstraints" />
+
+        <!-- Tombol btnLihatSelengkapnya (Diperlukan oleh HomeActivity.kt) -->
+        <Button
+            android:id="@+id/btnLihatSelengkapnya"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:layout_marginTop="8dp"
+            android:text="Lihat Selengkapnya"
+            android:textColor="#FFFFFF"
+            android:backgroundTint="@color/purple_500" />
+
+        <!-- Pengumuman -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:text="Pengumuman"
+            android:textColor="#333333"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvPengumuman"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:nestedScrollingEnabled="false"
+            tools:listitem="@layout/item_berita_pengumuman"
+            tools:ignore="MissingConstraints" />
+
+        <!-- Artikel -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:text="Artikel Edukasi"
+            android:textColor="#333333"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvArtikel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:nestedScrollingEnabled="false"
+            tools:listitem="@layout/item_artikel"
+            tools:ignore="MissingConstraints" />
+
+        <!-- ✅ LAYANAN (DITAMBAHKAN DI SINI) -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:text="Layanan"
+            android:textColor="#333333"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvLayanan"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:nestedScrollingEnabled="false"
+            tools:listitem="@layout/item_layanan"
+            tools:ignore="MissingConstraints" />
+        <!-- ✅ END -->
+
+        <!-- Pimpinan Bapenda -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:text="Pimpinan Bapenda"
+            android:textColor="#333333"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvPimpinan"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:nestedScrollingEnabled="false"
+            tools:listitem="@layout/item_pimpinan_bapenda"
+            tools:ignore="MissingConstraints" />
+
+        <!-- Visi Misi -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:text="Visi &amp; Misi"
+            android:textColor="#333333"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            app:cardCornerRadius="12dp"
+            app:cardElevation="4dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp"
+                android:background="#FFFFFF">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Visi:"
+                    android:textColor="#333333"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:text="Mewujudkan pengelolaan pendapatan daerah yang transparan, akuntabel, dan profesional untuk kesejahteraan masyarakat Cianjur."
+                    android:textColor="#666666" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="12dp"
+                    android:text="Misi:"
+                    android:textColor="#333333"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:text="1. Meningkatkan kualitas pelayanan perpajakan daerah.\n2. Mengoptimalkan penerimaan pendapatan daerah.\n3. Mengembangkan sistem informasi pengelolaan pendapatan daerah yang terintegrasi."
+                    android:textColor="#666666" />
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+
+        <!-- Tugas dan Fungsi -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:text="Tugas dan Fungsi"
+            android:textColor="#333333"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:layout_marginBottom="16dp"
+            app:cardCornerRadius="12dp"
+            app:cardElevation="4dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp"
+                android:background="#FFFFFF">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Tugas Pokok:"
+                    android:textColor="#333333"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:text="Melaksanakan urusan pemerintahan di bidang pengelolaan keuangan dan pendapatan daerah berdasarkan asas otonomi daerah dan tugas pembantuan."
+                    android:textColor="#666666" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="12dp"
+                    android:text="Fungsi:"
+                    android:textColor="#333333"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:text="1. Perumusan kebijakan teknis di bidang pengelolaan pendapatan daerah.\n2. Pelaksanaan kebijakan teknis di bidang pengelolaan pendapatan daerah.\n3. Pelayanan umum di bidang pengelolaan pendapatan daerah.\n4. Pembinaan dan pelaksanaan tugas di bidang pengelolaan pendapatan daerah.\n5. Pelaksanaan tugas lain yang diberikan oleh Bupati terkait tugas dan fungsinya."
+                    android:textColor="#666666" />
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+
+        <!-- Ulasan -->
+        <TextView
+            android:id="@+id/tvReviewTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="32dp"
+            android:text="Berikan Ulasan Anda"
+            android:textColor="#333333"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
+        <EditText
+            android:id="@+id/etUserReview"
+            android:layout_width="match_parent"
+            android:layout_height="120dp"
+            android:layout_marginTop="12dp"
+            android:background="@drawable/rounded_edittext"
+            android:gravity="top"
+            android:hint="Tulis ulasan Anda di sini..."
+            android:inputType="textMultiLine"
+            android:padding="16dp"
+            android:textColor="#333333"
+            android:textColorHint="#999999"
+            android:textSize="16sp" />
+
+        <Button
+            android:id="@+id/btnSubmitReview"
+            android:layout_width="match_parent"
+            android:layout_height="55dp"
+            android:layout_marginTop="16dp"
+            android:background="@drawable/rounded_button_primary"
+            android:text="Kirim Ulasan"
+            android:textColor="#FFFFFF"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:elevation="4dp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:textAlignment="center"
+            android:text="© 2025 Bapenda Kabupaten Cianjur"
+            android:textColor="#999999"
+            android:textSize="12sp" />
+
+    </LinearLayout>
+</ScrollView>
