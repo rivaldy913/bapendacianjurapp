@@ -51,6 +51,15 @@
             android:exported="false">
         </activity>
 
+        <activity
+            android:name=".admin.AdminAnnouncementsInputActivity"
+            android:exported="false">
+        </activity>
+        <activity
+            android:name=".admin.AdminServicesInputActivity"
+            android:exported="false">
+        </activity>
+
     </application>
 
 </manifest>

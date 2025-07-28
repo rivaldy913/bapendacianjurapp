@@ -32,15 +32,17 @@ class AdminDashboardActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
+        // --- MULAI PERBARUIAN DI SINI ---
         cardManageAnnouncements.setOnClickListener {
-            // TODO: Buat AdminAnnouncementsInputActivity dan pindahkan logika ke sana
-            Toast.makeText(this, "Kelola Pengumuman (belum diimplementasikan)", Toast.LENGTH_SHORT).show()
+            val intent = Intent(this, AdminAnnouncementsInputActivity::class.java)
+            startActivity(intent)
         }
 
         cardManageServices.setOnClickListener {
-            // TODO: Buat AdminServicesInputActivity dan pindahkan logika ke sana
-            Toast.makeText(this, "Kelola Layanan (belum diimplementasikan)", Toast.LENGTH_SHORT).show()
+            val intent = Intent(this, AdminServicesInputActivity::class.java)
+            startActivity(intent)
         }
+        // --- AKHIR PERBARUIAN DI SINI ---
 
         cardManageProfile.setOnClickListener {
             // TODO: Buat AdminProfileInputActivity dan pindahkan logika ke sana

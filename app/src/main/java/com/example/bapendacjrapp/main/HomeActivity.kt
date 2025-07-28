@@ -29,6 +29,7 @@ class HomeActivity : AppCompatActivity() {
     private lateinit var rvArtikel: RecyclerView
     private lateinit var rvPimpinan: RecyclerView
     private lateinit var rvLayanan: RecyclerView
+    private lateinit var rvReviews: RecyclerView // Deklarasi untuk RecyclerView ulasan
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -45,12 +46,14 @@ class HomeActivity : AppCompatActivity() {
         rvArtikel = findViewById(R.id.rvArtikel)
         rvPimpinan = findViewById(R.id.rvPimpinan)
         rvLayanan = findViewById(R.id.rvLayanan)
+        rvReviews = findViewById(R.id.rvReviews) // Inisialisasi RecyclerView ulasan
 
         rvBerita.layoutManager = LinearLayoutManager(this)
         rvPengumuman.layoutManager = LinearLayoutManager(this)
         rvArtikel.layoutManager = LinearLayoutManager(this)
         rvPimpinan.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
         rvLayanan.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
+        rvReviews.layoutManager = LinearLayoutManager(this) // Atur layout manager untuk ulasan
 
         btnSubmitReview.setOnClickListener {
             val reviewText = etUserReview.text.toString().trim()
@@ -61,13 +64,14 @@ class HomeActivity : AppCompatActivity() {
                     val review = hashMapOf(
                         "userId" to userId,
                         "reviewText" to reviewText,
-                        "timestamp" to Date()
+                        "timestamp" to Date().time
                     )
                     db.collection("reviews")
                         .add(review)
                         .addOnSuccessListener {
                             Toast.makeText(this, "Ulasan berhasil dikirim!", Toast.LENGTH_SHORT).show()
                             etUserReview.text.clear()
+                            loadReviews() // Muat ulang ulasan setelah ulasan baru dikirim
                         }
                         .addOnFailureListener { e ->
                             Toast.makeText(this, "Gagal: ${e.message}", Toast.LENGTH_LONG).show()
@@ -89,17 +93,15 @@ class HomeActivity : AppCompatActivity() {
         loadBerita()
         loadPengumuman()
         loadArtikel()
+        loadLayanan()
+        loadReviews() // Panggil fungsi ini untuk memuat dan menampilkan ulasan
 
         val pimpinanList = listOf(
             PimpinanItem("p1", R.drawable.placeholder_pimpinan_1, "Dr. H. M. Ridwan", "Kepala Bapenda")
         )
         rvPimpinan.adapter = PimpinanAdapter(pimpinanList) {}
 
-        val layananList = listOf(
-            LayananItem("l1", R.drawable.placeholder_motorcycle_icon, "PKB"),
-            LayananItem("l2", R.drawable.placeholder_car_icon, "BBNKB")
-        )
-        rvLayanan.adapter = LayananAdapter(layananList) {}
+        // Bagian layanan yang hardcode sudah dihapus karena diganti dengan loadLayanan()
     }
 
     private fun loadBerita() {
@@ -193,6 +195,75 @@ class HomeActivity : AppCompatActivity() {
             }
             .addOnFailureListener { exception ->
                 Toast.makeText(this, "Error getting articles: ${exception.message}", Toast.LENGTH_LONG).show()
+            }
+    }
+
+    private fun loadLayanan() {
+        val layananList = mutableListOf<LayananItem>()
+        db.collection("services")
+            .orderBy("timestamp", Query.Direction.DESCENDING)
+            .get()
+            .addOnSuccessListener { result ->
+                for (document in result) {
+                    val id = document.id
+                    val title = document.getString("title") ?: ""
+                    val iconResName = document.getString("iconResId") ?: "" // Ambil nama resource
+
+                    val iconResId = resources.getIdentifier(iconResName, "drawable", packageName)
+
+                    if (iconResId != 0) {
+                        layananList.add(LayananItem(id, iconResId, title))
+                    } else {
+                        layananList.add(LayananItem(id, R.drawable.placeholder_file_icon, title))
+                    }
+                }
+                rvLayanan.adapter = LayananAdapter(layananList) { item ->
+                    startActivity(Intent(this, DetailActivity::class.java).apply {
+                        putExtra("title", item.title)
+                        putExtra("content", "Informasi detail untuk layanan: ${item.title}")
+                    })
+                }
+            }
+            .addOnFailureListener { exception ->
+                Toast.makeText(this, "Error getting services: ${exception.message}", Toast.LENGTH_LONG).show()
+                layananList.clear()
+                layananList.add(LayananItem("l1", R.drawable.placeholder_motorcycle_icon, "PKB (Default)"))
+                layananList.add(LayananItem("l2", R.drawable.placeholder_car_icon, "BBNKB (Default)"))
+                rvLayanan.adapter = LayananAdapter(layananList) { item ->
+                    startActivity(Intent(this, DetailActivity::class.java).apply {
+                        putExtra("title", item.title)
+                        putExtra("content", "Informasi detail untuk layanan: ${item.title} (dari placeholder)")
+                    })
+                }
+            }
+    }
+
+    // Fungsi untuk memuat ulasan dari Firestore
+    private fun loadReviews() {
+        val reviewList = mutableListOf<ReviewItem>()
+        db.collection("reviews")
+            .orderBy("timestamp", Query.Direction.DESCENDING)
+            .limit(5)
+            .get()
+            .addOnSuccessListener { result ->
+                for (document in result) {
+                    val id = document.id
+                    val userId = document.getString("userId") ?: "Anonim"
+                    val reviewText = document.getString("reviewText") ?: ""
+
+                    // Penanganan timestamp yang kompatibel dengan format Date() dan Date().time
+                    val timestamp: Long = when (val rawTimestamp = document.get("timestamp")) {
+                        is com.google.firebase.Timestamp -> rawTimestamp.toDate().time
+                        is Long -> rawTimestamp
+                        else -> 0L
+                    }
+
+                    reviewList.add(ReviewItem(id, userId, reviewText, timestamp))
+                }
+                rvReviews.adapter = ReviewAdapter(reviewList)
+            }
+            .addOnFailureListener { exception ->
+                Toast.makeText(this, "Error getting reviews: ${exception.message}", Toast.LENGTH_LONG).show()
             }
     }
 }

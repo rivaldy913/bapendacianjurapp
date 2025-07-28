@@ -1,14 +1,15 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     android:background="#F0F2F5"
-    tools:context=".main.RegisterActivity">
+    tools:context=".admin.AdminAnnouncementsInputActivity">
 
-    <!-- Toolbar kustom untuk judul dan tombol kembali -->
     <LinearLayout
-        android:id="@+id/registerToolbar"
+        android:id="@+id/announcementInputToolbar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
         android:background="#007BFF"
@@ -18,7 +19,7 @@
         android:paddingEnd="16dp">
 
         <ImageView
-            android:id="@+id/ivRegisterBack"
+            android:id="@+id/ivAnnouncementInputBack"
             android:layout_width="24dp"
             android:layout_height="24dp"
             android:src="@drawable/ic_arrow_back_white"
@@ -31,7 +32,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:layout_marginStart="16dp"
-            android:text="Daftar Akun Baru"
+            android:text="Input Pengumuman Baru"
             android:textColor="@android:color/white"
             android:textSize="20sp"
             android:textStyle="bold" />
@@ -40,40 +41,21 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/registerToolbar"
         android:padding="16dp">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:gravity="center_horizontal"
-            android:paddingTop="32dp">
-
-            <ImageView
-                android:layout_width="100dp"
-                android:layout_height="100dp"
-                android:src="@drawable/logo_bapenda"
-                android:contentDescription="Logo Aplikasi" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="24dp"
-                android:text="Buat Akun Bapenda Anda"
-                android:textColor="#333333"
-                android:textSize="22sp"
-                android:textStyle="bold"
-                android:textAlignment="center" />
+            android:orientation="vertical">
 
             <EditText
-                android:id="@+id/etRegisterEmail"
+                android:id="@+id/etAnnouncementTitle"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
-                android:layout_marginTop="32dp"
+                android:layout_marginBottom="12dp"
                 android:background="@drawable/rounded_edittext"
-                android:hint="Email"
-                android:inputType="textEmailAddress"
+                android:hint="Judul Pengumuman"
+                android:inputType="textCapSentences"
                 android:paddingStart="16dp"
                 android:paddingEnd="16dp"
                 android:textColor="#333333"
@@ -81,13 +63,13 @@
                 android:textSize="16sp" />
 
             <EditText
-                android:id="@+id/etRegisterPassword"
+                android:id="@+id/etAnnouncementDate"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
-                android:layout_marginTop="16dp"
+                android:layout_marginBottom="12dp"
                 android:background="@drawable/rounded_edittext"
-                android:hint="Password"
-                android:inputType="textPassword"
+                android:hint="Tanggal (contoh: 08 Jul 2025)"
+                android:inputType="date"
                 android:paddingStart="16dp"
                 android:paddingEnd="16dp"
                 android:textColor="#333333"
@@ -95,13 +77,27 @@
                 android:textSize="16sp" />
 
             <EditText
-                android:id="@+id/etRegisterConfirmPassword"
+                android:id="@+id/etAnnouncementDescription"
+                android:layout_width="match_parent"
+                android:layout_height="120dp"
+                android:layout_marginBottom="12dp"
+                android:background="@drawable/rounded_edittext"
+                android:gravity="top"
+                android:hint="Deskripsi Pengumuman"
+                android:inputType="textMultiLine"
+                android:padding="16dp"
+                android:textColor="#333333"
+                android:textColorHint="#999999"
+                android:textSize="16sp" />
+
+            <EditText
+                android:id="@+id/etAnnouncementImageUrl"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
-                android:layout_marginTop="16dp"
+                android:layout_marginBottom="24dp"
                 android:background="@drawable/rounded_edittext"
-                android:hint="Konfirmasi Password"
-                android:inputType="textPassword"
+                android:hint="Nama Drawable Gambar (contoh: placeholder_announcement_image)"
+                android:inputType="text"
                 android:paddingStart="16dp"
                 android:paddingEnd="16dp"
                 android:textColor="#333333"
@@ -109,28 +105,16 @@
                 android:textSize="16sp" />
 
             <Button
-                android:id="@+id/btnRegisterAccount"
+                android:id="@+id/btnAddAnnouncement"
                 android:layout_width="match_parent"
                 android:layout_height="55dp"
-                android:layout_marginTop="24dp"
                 android:background="@drawable/rounded_button_primary"
-                android:text="Daftar Akun"
+                android:text="Tambah Pengumuman"
                 android:textColor="#FFFFFF"
                 android:textSize="18sp"
                 android:textStyle="bold"
                 android:elevation="4dp" />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:text="Sudah punya akun? Login di sini."
-                android:textColor="#007BFF"
-                android:textSize="14sp"
-                android:clickable="true"
-                android:focusable="true"
-                android:onClick="onLoginClick" /> <!-- Akan ditangani di RegisterActivity -->
-
         </LinearLayout>
     </ScrollView>
-</RelativeLayout>
+</LinearLayout>

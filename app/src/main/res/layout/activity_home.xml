@@ -13,7 +13,6 @@
         android:orientation="vertical"
         android:padding="16dp">
 
-        <!-- Header Selamat Datang -->
         <TextView
             android:id="@+id/tvWelcome"
             android:layout_width="match_parent"
@@ -35,7 +34,6 @@
             android:textSize="14sp"
             android:textAlignment="center" />
 
-        <!-- Berita -->
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -54,7 +52,6 @@
             tools:listitem="@layout/item_berita_pengumuman"
             tools:ignore="MissingConstraints" />
 
-        <!-- Tombol btnLihatSelengkapnya (Diperlukan oleh HomeActivity.kt) -->
         <Button
             android:id="@+id/btnLihatSelengkapnya"
             android:layout_width="wrap_content"
@@ -65,7 +62,6 @@
             android:textColor="#FFFFFF"
             android:backgroundTint="@color/purple_500" />
 
-        <!-- Pengumuman -->
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -84,7 +80,6 @@
             tools:listitem="@layout/item_berita_pengumuman"
             tools:ignore="MissingConstraints" />
 
-        <!-- Artikel -->
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -103,7 +98,6 @@
             tools:listitem="@layout/item_artikel"
             tools:ignore="MissingConstraints" />
 
-        <!-- ✅ LAYANAN (DITAMBAHKAN DI SINI) -->
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -121,9 +115,6 @@
             android:nestedScrollingEnabled="false"
             tools:listitem="@layout/item_layanan"
             tools:ignore="MissingConstraints" />
-        <!-- ✅ END -->
-
-        <!-- Pimpinan Bapenda -->
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -142,7 +133,6 @@
             tools:listitem="@layout/item_pimpinan_bapenda"
             tools:ignore="MissingConstraints" />
 
-        <!-- Visi Misi -->
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -199,7 +189,6 @@
             </LinearLayout>
         </androidx.cardview.widget.CardView>
 
-        <!-- Tugas dan Fungsi -->
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -257,7 +246,6 @@
             </LinearLayout>
         </androidx.cardview.widget.CardView>
 
-        <!-- Ulasan -->
         <TextView
             android:id="@+id/tvReviewTitle"
             android:layout_width="wrap_content"
@@ -295,8 +283,23 @@
             android:elevation="4dp" />
 
         <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:text="Ulasan Pengguna Lain"
+            android:textColor="#333333"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvReviews"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:nestedScrollingEnabled="false"
+            tools:listitem="@layout/item_review" />
+        <TextView
+            android:layout_width="match_parent" android:layout_height="wrap_content"
             android:layout_marginTop="24dp"
             android:textAlignment="center"
             android:text="© 2025 Bapenda Kabupaten Cianjur"
