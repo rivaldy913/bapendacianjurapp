@@ -2,26 +2,34 @@ package com.example.bapendacjrapp.admin
 
 import android.content.Intent
 import android.os.Bundle
+import android.widget.Button // Import Button
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.cardview.widget.CardView // Import CardView
+import androidx.cardview.widget.CardView
 import com.example.bapendacjrapp.R
+import com.example.bapendacjrapp.MainActivity
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 
 class AdminDashboardActivity : AppCompatActivity() {
 
+    private lateinit var auth: FirebaseAuth
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_admin_dashboard) // Menggunakan layout dashboard yang baru
+        setContentView(R.layout.activity_admin_dashboard)
 
-        // Inisialisasi CardView
+        auth = Firebase.auth
+
         val cardManageNews = findViewById<CardView>(R.id.cardManageNews)
         val cardManageArticles = findViewById<CardView>(R.id.cardManageArticles)
         val cardManageAnnouncements = findViewById<CardView>(R.id.cardManageAnnouncements)
         val cardManageServices = findViewById<CardView>(R.id.cardManageServices)
         val cardManageProfile = findViewById<CardView>(R.id.cardManageProfile)
         val cardEditAdminProfile = findViewById<CardView>(R.id.cardEditAdminProfile)
+        val btnLogout = findViewById<Button>(R.id.btnLogout) // Inisialisasi Button Logout
 
-        // Set Listener untuk setiap CardView
         cardManageNews.setOnClickListener {
             val intent = Intent(this, AdminNewsInputActivity::class.java)
             startActivity(intent)
@@ -32,7 +40,6 @@ class AdminDashboardActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
-        // --- MULAI PERBARUIAN DI SINI ---
         cardManageAnnouncements.setOnClickListener {
             val intent = Intent(this, AdminAnnouncementsInputActivity::class.java)
             startActivity(intent)
@@ -42,16 +49,26 @@ class AdminDashboardActivity : AppCompatActivity() {
             val intent = Intent(this, AdminServicesInputActivity::class.java)
             startActivity(intent)
         }
-        // --- AKHIR PERBARUIAN DI SINI ---
 
         cardManageProfile.setOnClickListener {
-            // TODO: Buat AdminProfileInputActivity dan pindahkan logika ke sana
-            Toast.makeText(this, "Kelola Profil Bapenda (belum diimplementasikan)", Toast.LENGTH_SHORT).show()
+            val intent = Intent(this, AdminProfileInputActivity::class.java)
+            startActivity(intent)
         }
 
         cardEditAdminProfile.setOnClickListener {
-            // TODO: Buat AdminEditAdminProfileActivity dan pindahkan logika ke sana
-            Toast.makeText(this, "Edit Profil Admin (belum diimplementasikan)", Toast.LENGTH_SHORT).show()
+            val intent = Intent(this, AdminEditAdminProfileActivity::class.java)
+            startActivity(intent)
+        }
+
+        // Listener untuk Button Logout
+        btnLogout.setOnClickListener {
+            auth.signOut()
+            Toast.makeText(this, "Berhasil logout.", Toast.LENGTH_SHORT).show()
+
+            val intent = Intent(this, MainActivity::class.java)
+            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+            startActivity(intent)
+            finish()
         }
     }
 }

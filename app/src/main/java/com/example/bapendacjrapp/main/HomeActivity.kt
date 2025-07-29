@@ -2,8 +2,11 @@ package com.example.bapendacjrapp.main
 
 import android.content.Intent
 import android.os.Bundle
+import android.view.View
 import android.widget.Button
 import android.widget.EditText
+import android.widget.ImageView
+import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.cardview.widget.CardView
@@ -17,19 +20,32 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import java.util.Date
+import com.google.android.material.tabs.TabLayout
+import com.google.android.material.tabs.TabLayoutMediator
+import androidx.viewpager2.widget.ViewPager2
 import com.google.firebase.firestore.Query
+import android.widget.ImageButton // Import ImageButton
 
 class HomeActivity : AppCompatActivity() {
 
     private lateinit var db: FirebaseFirestore
     private lateinit var auth: FirebaseAuth
 
-    private lateinit var rvBerita: RecyclerView
+    private lateinit var vpBerita: ViewPager2
+    private lateinit var tabLayoutBeritaIndicator: TabLayout
+    private lateinit var btnArrowLeft: ImageButton // Deklarasi panah kiri
+    private lateinit var btnArrowRight: ImageButton // Deklarasi panah kanan
     private lateinit var rvPengumuman: RecyclerView
     private lateinit var rvArtikel: RecyclerView
     private lateinit var rvPimpinan: RecyclerView
     private lateinit var rvLayanan: RecyclerView
-    private lateinit var rvReviews: RecyclerView // Deklarasi untuk RecyclerView ulasan
+    private lateinit var rvReviews: RecyclerView
+
+    private lateinit var tvVisiContent: TextView
+    private lateinit var tvMisiContent: TextView
+    private lateinit var ivStrukturOrganisasi: ImageView
+    private lateinit var tvTujuanDanFungsiContent: TextView
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -41,19 +57,27 @@ class HomeActivity : AppCompatActivity() {
         val etUserReview = findViewById<EditText>(R.id.etUserReview)
         val btnSubmitReview = findViewById<Button>(R.id.btnSubmitReview)
 
-        rvBerita = findViewById(R.id.rvBerita)
+        vpBerita = findViewById(R.id.vpBerita)
+        tabLayoutBeritaIndicator = findViewById(R.id.tabLayoutBeritaIndicator)
+        btnArrowLeft = findViewById(R.id.btnArrowLeft) // Inisialisasi panah kiri
+        btnArrowRight = findViewById(R.id.btnArrowRight) // Inisialisasi panah kanan
         rvPengumuman = findViewById(R.id.rvPengumuman)
         rvArtikel = findViewById(R.id.rvArtikel)
         rvPimpinan = findViewById(R.id.rvPimpinan)
         rvLayanan = findViewById(R.id.rvLayanan)
-        rvReviews = findViewById(R.id.rvReviews) // Inisialisasi RecyclerView ulasan
+        rvReviews = findViewById(R.id.rvReviews)
 
-        rvBerita.layoutManager = LinearLayoutManager(this)
+        tvVisiContent = findViewById(R.id.tvVisiContent)
+        tvMisiContent = findViewById(R.id.tvMisiContent)
+        ivStrukturOrganisasi = findViewById(R.id.ivStrukturOrganisasi)
+        tvTujuanDanFungsiContent = findViewById(R.id.tvTujuanDanFungsiContent)
+
+
         rvPengumuman.layoutManager = LinearLayoutManager(this)
         rvArtikel.layoutManager = LinearLayoutManager(this)
         rvPimpinan.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
         rvLayanan.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
-        rvReviews.layoutManager = LinearLayoutManager(this) // Atur layout manager untuk ulasan
+        rvReviews.layoutManager = LinearLayoutManager(this)
 
         btnSubmitReview.setOnClickListener {
             val reviewText = etUserReview.text.toString().trim()
@@ -71,7 +95,7 @@ class HomeActivity : AppCompatActivity() {
                         .addOnSuccessListener {
                             Toast.makeText(this, "Ulasan berhasil dikirim!", Toast.LENGTH_SHORT).show()
                             etUserReview.text.clear()
-                            loadReviews() // Muat ulang ulasan setelah ulasan baru dikirim
+                            loadReviews()
                         }
                         .addOnFailureListener { e ->
                             Toast.makeText(this, "Gagal: ${e.message}", Toast.LENGTH_LONG).show()
@@ -84,24 +108,14 @@ class HomeActivity : AppCompatActivity() {
             }
         }
 
-        findViewById<Button>(R.id.btnLihatSelengkapnya).setOnClickListener {
-            startActivity(Intent(this, DetailActivity::class.java).apply {
-                putExtra("title", "Profil Bapenda")
-            })
-        }
+        // Tidak ada lagi tombol btnLihatSelengkapnya
 
         loadBerita()
         loadPengumuman()
         loadArtikel()
         loadLayanan()
-        loadReviews() // Panggil fungsi ini untuk memuat dan menampilkan ulasan
-
-        val pimpinanList = listOf(
-            PimpinanItem("p1", R.drawable.placeholder_pimpinan_1, "Dr. H. M. Ridwan", "Kepala Bapenda")
-        )
-        rvPimpinan.adapter = PimpinanAdapter(pimpinanList) {}
-
-        // Bagian layanan yang hardcode sudah dihapus karena diganti dengan loadLayanan()
+        loadReviews()
+        loadBapendaProfileContent()
     }
 
     private fun loadBerita() {
@@ -116,21 +130,54 @@ class HomeActivity : AppCompatActivity() {
                     val date = document.getString("date") ?: ""
                     val category = document.getString("category") ?: "Berita"
                     val description = document.getString("description") ?: ""
-                    val imageUrl = document.getString("imageUrl") ?: "" // Nama drawable
+                    val imageUrl = document.getString("imageUrl") ?: ""
 
                     beritaList.add(BeritaPengumumanItem(id, imageUrl, title, date, category, description))
                 }
-                rvBerita.adapter = BeritaPengumumanAdapter(beritaList) { item ->
-                    startActivity(Intent(this, DetailActivity::class.java).apply {
-                        putExtra("title", item.title)
-                        putExtra("content", item.description)
-                    })
+                vpBerita.adapter = NewsPagerAdapter(this, beritaList)
+
+                // Hubungkan TabLayout dengan ViewPager2 untuk indikator
+                TabLayoutMediator(tabLayoutBeritaIndicator, vpBerita) { tab, position ->
+                    // Tidak perlu teks untuk tab karena kita pakai drawable sebagai indikator
+                }.attach()
+
+                // Atur logika panah navigasi
+                updateArrowVisibility(vpBerita.currentItem, beritaList.size)
+
+                vpBerita.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
+                    override fun onPageSelected(position: Int) {
+                        super.onPageSelected(position)
+                        updateArrowVisibility(position, beritaList.size)
+                    }
+                })
+
+                btnArrowLeft.setOnClickListener {
+                    vpBerita.currentItem = vpBerita.currentItem - 1
                 }
+
+                btnArrowRight.setOnClickListener {
+                    vpBerita.currentItem = vpBerita.currentItem + 1
+                }
+
             }
             .addOnFailureListener { exception ->
                 Toast.makeText(this, "Error getting news: ${exception.message}", Toast.LENGTH_LONG).show()
+                vpBerita.adapter = NewsPagerAdapter(this, emptyList())
+                updateArrowVisibility(0, 0) // Sembunyikan panah jika tidak ada berita
             }
     }
+
+    // Fungsi untuk memperbarui visibilitas panah
+    private fun updateArrowVisibility(currentPosition: Int, totalItems: Int) {
+        if (totalItems <= 1) { // Jika hanya ada 0 atau 1 item, sembunyikan kedua panah
+            btnArrowLeft.visibility = View.GONE
+            btnArrowRight.visibility = View.GONE
+        } else {
+            btnArrowLeft.visibility = if (currentPosition == 0) View.GONE else View.VISIBLE
+            btnArrowRight.visibility = if (currentPosition == totalItems - 1) View.GONE else View.VISIBLE
+        }
+    }
+
 
     private fun loadPengumuman() {
         val pengumumanList = mutableListOf<BeritaPengumumanItem>()
@@ -152,9 +199,11 @@ class HomeActivity : AppCompatActivity() {
                     }
                 }
                 rvPengumuman.adapter = BeritaPengumumanAdapter(pengumumanList) { item ->
+                    val imageResId = resources.getIdentifier(item.imageUrl, "drawable", packageName)
                     startActivity(Intent(this, DetailActivity::class.java).apply {
                         putExtra("title", item.title)
                         putExtra("content", item.description)
+                        putExtra("image_res_id", if (imageResId != 0) imageResId else R.drawable.placeholder_announcement_image)
                     })
                 }
             }
@@ -165,6 +214,7 @@ class HomeActivity : AppCompatActivity() {
                     startActivity(Intent(this, DetailActivity::class.java).apply {
                         putExtra("title", item.title)
                         putExtra("content", item.description)
+                        putExtra("image_res_id", R.drawable.placeholder_announcement_image)
                     })
                 }
             }
@@ -182,14 +232,16 @@ class HomeActivity : AppCompatActivity() {
                     val date = document.getString("date") ?: ""
                     val category = document.getString("category") ?: "Artikel"
                     val description = document.getString("description") ?: ""
-                    val imageUrl = document.getString("imageUrl") ?: "" // Nama drawable
+                    val imageUrl = document.getString("imageUrl") ?: ""
 
                     artikelList.add(ArtikelItem(id, imageUrl, title, date, category, description))
                 }
                 rvArtikel.adapter = ArtikelAdapter(artikelList) { item ->
+                    val imageResId = resources.getIdentifier(item.imageUrl, "drawable", packageName)
                     startActivity(Intent(this, DetailActivity::class.java).apply {
                         putExtra("title", item.title)
                         putExtra("content", item.description)
+                        putExtra("image_res_id", if (imageResId != 0) imageResId else R.drawable.placeholder_article_image)
                     })
                 }
             }
@@ -207,38 +259,40 @@ class HomeActivity : AppCompatActivity() {
                 for (document in result) {
                     val id = document.id
                     val title = document.getString("title") ?: ""
-                    val iconResName = document.getString("iconResId") ?: "" // Ambil nama resource
+                    val iconResName = document.getString("iconResId") ?: ""
+                    val description = document.getString("description") ?: ""
 
                     val iconResId = resources.getIdentifier(iconResName, "drawable", packageName)
 
                     if (iconResId != 0) {
-                        layananList.add(LayananItem(id, iconResId, title))
+                        layananList.add(LayananItem(id, iconResId, title, description))
                     } else {
-                        layananList.add(LayananItem(id, R.drawable.placeholder_file_icon, title))
+                        layananList.add(LayananItem(id, R.drawable.placeholder_file_icon, title, description))
                     }
                 }
                 rvLayanan.adapter = LayananAdapter(layananList) { item ->
                     startActivity(Intent(this, DetailActivity::class.java).apply {
                         putExtra("title", item.title)
-                        putExtra("content", "Informasi detail untuk layanan: ${item.title}")
+                        putExtra("content", item.description)
+                        putExtra("image_res_id", item.iconResId)
                     })
                 }
             }
             .addOnFailureListener { exception ->
                 Toast.makeText(this, "Error getting services: ${exception.message}", Toast.LENGTH_LONG).show()
                 layananList.clear()
-                layananList.add(LayananItem("l1", R.drawable.placeholder_motorcycle_icon, "PKB (Default)"))
-                layananList.add(LayananItem("l2", R.drawable.placeholder_car_icon, "BBNKB (Default)"))
+                layananList.add(LayananItem("l1", R.drawable.placeholder_motorcycle_icon, "PKB (Default)", "Deskripsi default PKB."))
+                layananList.add(LayananItem("l2", R.drawable.placeholder_car_icon, "BBNKB (Default)", "Deskripsi default BBNKB."))
                 rvLayanan.adapter = LayananAdapter(layananList) { item ->
                     startActivity(Intent(this, DetailActivity::class.java).apply {
                         putExtra("title", item.title)
-                        putExtra("content", "Informasi detail untuk layanan: ${item.title} (dari placeholder)")
+                        putExtra("content", item.description)
+                        putExtra("image_res_id", item.iconResId)
                     })
                 }
             }
     }
 
-    // Fungsi untuk memuat ulasan dari Firestore
     private fun loadReviews() {
         val reviewList = mutableListOf<ReviewItem>()
         db.collection("reviews")
@@ -251,7 +305,6 @@ class HomeActivity : AppCompatActivity() {
                     val userId = document.getString("userId") ?: "Anonim"
                     val reviewText = document.getString("reviewText") ?: ""
 
-                    // Penanganan timestamp yang kompatibel dengan format Date() dan Date().time
                     val timestamp: Long = when (val rawTimestamp = document.get("timestamp")) {
                         is com.google.firebase.Timestamp -> rawTimestamp.toDate().time
                         is Long -> rawTimestamp
@@ -265,5 +318,85 @@ class HomeActivity : AppCompatActivity() {
             .addOnFailureListener { exception ->
                 Toast.makeText(this, "Error getting reviews: ${exception.message}", Toast.LENGTH_LONG).show()
             }
+    }
+
+    private fun loadBapendaProfileContent() {
+        db.collection("bapenda_profile").document("currentProfile")
+            .get()
+            .addOnSuccessListener { document ->
+                if (document.exists()) {
+                    val visi = document.getString("visi") ?: "Visi belum diatur."
+                    val misi = document.getString("misi") ?: "Misi belum diatur."
+                    val strukturOrganisasiDrawableName = document.getString("strukturOrganisasi") ?: ""
+                    val tujuanDanFungsi = document.getString("tujuanDanFungsi") ?: "Tujuan dan Fungsi belum diatur."
+                    val pimpinanListString = document.getString("pimpinanList") ?: ""
+
+                    tvVisiContent.text = visi
+                    tvMisiContent.text = misi
+                    tvTujuanDanFungsiContent.text = tujuanDanFungsi
+
+                    val strukturOrganisasiResId = resources.getIdentifier(strukturOrganisasiDrawableName, "drawable", packageName)
+                    if (strukturOrganisasiResId != 0) {
+                        ivStrukturOrganisasi.setImageResource(strukturOrganisasiResId)
+                        ivStrukturOrganisasi.setOnClickListener {
+                            val intent = Intent(this, ImageViewerActivity::class.java).apply {
+                                putExtra("image_res_id", strukturOrganisasiResId)
+                            }
+                            startActivity(intent)
+                        }
+                    } else {
+                        ivStrukturOrganisasi.setImageResource(R.drawable.placeholder_file_icon)
+                        ivStrukturOrganisasi.setOnClickListener(null)
+                    }
+
+                    val pimpinanList = parsePimpinanString(pimpinanListString)
+                    rvPimpinan.adapter = PimpinanAdapter(pimpinanList) { item ->
+                        startActivity(Intent(this, DetailActivity::class.java).apply {
+                            putExtra("title", item.name)
+                            putExtra("content", "Nama: ${item.name}\nJabatan: ${item.position}")
+                            putExtra("image_res_id", item.imageUrl)
+                        })
+                    }
+
+                } else {
+                    tvVisiContent.text = "Visi belum tersedia. Silakan hubungi admin."
+                    tvMisiContent.text = "Misi belum tersedia. Silakan hubungi admin."
+                    tvTujuanDanFungsiContent.text = "Tujuan & Fungsi belum tersedia. Silakan hubungi admin."
+                    ivStrukturOrganisasi.setImageResource(R.drawable.placeholder_file_icon)
+                    ivStrukturOrganisasi.setOnClickListener(null)
+                    rvPimpinan.adapter = PimpinanAdapter(emptyList()) {}
+                }
+            }
+            .addOnFailureListener { e ->
+                Toast.makeText(this, "Gagal memuat profil Bapenda: ${e.message}", Toast.LENGTH_LONG).show()
+                tvVisiContent.text = "Gagal memuat visi."
+                tvMisiContent.text = "Gagal memuat misi."
+                tvTujuanDanFungsiContent.text = "Gagal memuat tujuan & fungsi."
+                ivStrukturOrganisasi.setImageResource(R.drawable.placeholder_file_icon)
+                ivStrukturOrganisasi.setOnClickListener(null)
+                rvPimpinan.adapter = PimpinanAdapter(emptyList()) {}
+            }
+    }
+
+    private fun parsePimpinanString(pimpinanString: String): List<PimpinanItem> {
+        val pimpinanList = mutableListOf<PimpinanItem>()
+        pimpinanString.lines().forEachIndexed { index, line ->
+            val parts = line.split("|").map { it.trim() }
+            if (parts.size == 3) {
+                val id = "p${index + 1}"
+                val name = parts[0]
+                val position = parts[1]
+                val drawableName = parts[2]
+
+                val imageResId = resources.getIdentifier(drawableName, "drawable", packageName)
+
+                if (imageResId != 0) {
+                    pimpinanList.add(PimpinanItem(id, imageResId, name, position))
+                } else {
+                    pimpinanList.add(PimpinanItem(id, R.drawable.placeholder_pimpinan_1, name, position))
+                }
+            }
+        }
+        return pimpinanList
     }
 }

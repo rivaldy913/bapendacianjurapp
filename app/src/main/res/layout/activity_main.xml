@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:background="#F0F2F5"
     android:padding="16dp"
-    tools:context=".MainActivity"> <!-- Perbarui: tools:context sesuai package .main -->
+    tools:context=".MainActivity">
 
     <ImageView
         android:id="@+id/ivLogo"
@@ -43,26 +43,35 @@
         android:textColorHint="#999999"
         android:textSize="16sp" />
 
-    <EditText
-        android:id="@+id/etPassword"
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/tilPassword"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
+        android:layout_height="wrap_content"
         android:layout_below="@id/etUsername"
         android:layout_marginTop="16dp"
-        android:background="@drawable/rounded_edittext"
-        android:hint="Password"
-        android:inputType="textPassword"
-        android:paddingStart="16dp"
-        android:paddingEnd="16dp"
-        android:textColor="#333333"
-        android:textColorHint="#999999"
-        android:textSize="16sp" />
+        app:passwordToggleEnabled="true"
+        app:hintEnabled="false"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+
+        <EditText
+            android:id="@+id/etPassword"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:background="@drawable/rounded_edittext"
+            android:hint="Password"
+            android:inputType="textPassword"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp"
+            android:textColor="#333333"
+            android:textColorHint="#999999"
+            android:textSize="16sp" />
+    </com.google.android.material.textfield.TextInputLayout>
 
     <Button
         android:id="@+id/btnLogin"
         android:layout_width="match_parent"
         android:layout_height="55dp"
-        android:layout_below="@id/etPassword"
+        android:layout_below="@id/tilPassword"
         android:layout_marginTop="24dp"
         android:background="@drawable/rounded_button_primary"
         android:text="Login"

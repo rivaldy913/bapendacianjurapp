@@ -6,5 +6,6 @@ package com.example.bapendacjrapp.main
 data class LayananItem(
     val id: String,
     val iconResId: Int, // Menggunakan Int untuk resource drawable lokal
-    val title: String
+    val title: String,
+    val description: String // Tambahkan properti deskripsi
 )

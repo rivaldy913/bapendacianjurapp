@@ -7,6 +7,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.bapendacjrapp.R
+// import com.bumptech.glide.Glide // Hapus import Glide
 
 class PimpinanAdapter(
     private val items: List<PimpinanItem>,
@@ -27,7 +28,9 @@ class PimpinanAdapter(
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = items[position]
+        // Gunakan setImageResource untuk memuat gambar dari drawable lokal
         holder.imageView.setImageResource(item.imageUrl)
+
         holder.nameView.text = item.name
         holder.positionView.text = item.position
         holder.itemView.setOnClickListener { onItemClick(item) }

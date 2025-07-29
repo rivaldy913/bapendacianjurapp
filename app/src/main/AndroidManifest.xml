@@ -60,6 +60,21 @@
             android:exported="false">
         </activity>
 
+        <activity
+            android:name=".admin.AdminProfileInputActivity"
+            android:exported="false">
+        </activity>
+
+        <activity
+            android:name=".admin.AdminEditAdminProfileActivity"
+            android:exported="false">
+        </activity>
+
+        <activity
+            android:name=".main.ImageViewerActivity"
+            android:exported="false"
+            android:theme="@style/Theme.AppCompat.NoActionBar"> </activity>
+
     </application>
 
 </manifest>

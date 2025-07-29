@@ -3,6 +3,7 @@ plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
     id("com.google.gms.google-services")
+    id("kotlin-parcelize")
 }
 
 android {
@@ -61,6 +62,9 @@ dependencies {
 
     // Firebase Cloud Firestore
     implementation("com.google.firebase:firebase-firestore-ktx")
+
+    // ViewPager2 untuk carousel
+    implementation("androidx.viewpager2:viewpager2:1.0.0")
 
     // Dependensi Firebase Storage dan Glide dihapus
 

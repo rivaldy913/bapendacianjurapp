@@ -134,16 +134,17 @@
                         android:layout_width="60dp"
                         android:layout_height="60dp"
                         android:src="@drawable/placeholder_announcement_image"
-                        android:tint="@color/primaryBlue"
-                        android:contentDescription="Ikon Pengumuman" />
+                        android:contentDescription="Ikon Pengumuman"
+                        android:tint="@null"/>
                     <TextView
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="8dp"
                         android:text="Kelola Pengumuman"
                         android:textColor="#333333"
                         android:textSize="16sp"
-                        android:textStyle="bold" />
+                        android:textStyle="bold"
+                        android:textAlignment="center"/>
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
 
@@ -255,6 +256,21 @@
             </androidx.cardview.widget.CardView>
 
         </GridLayout>
+
+        <Button
+            android:id="@+id/btnLogout"
+            android:layout_width="match_parent"
+            android:layout_height="55dp"
+            android:layout_marginTop="24dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginBottom="16dp"
+            app:backgroundTint="@color/red_logout_color" android:text="LOGOUT"
+            android:textColor="#FFFFFF"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:elevation="4dp"
+            android:gravity="center" />
 
     </LinearLayout>
 </ScrollView>

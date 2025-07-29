@@ -16,6 +16,7 @@ class LayananAdapter(
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val iconView: ImageView = view.findViewById(R.id.itemIcon)
         val titleView: TextView = view.findViewById(R.id.itemTitle)
+        val descriptionView: TextView = view.findViewById(R.id.itemDescription) // Deklarasi TextView deskripsi
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -28,6 +29,7 @@ class LayananAdapter(
         val item = items[position]
         holder.iconView.setImageResource(item.iconResId)
         holder.titleView.text = item.title
+        holder.descriptionView.text = item.description // Ikat data deskripsi
         holder.itemView.setOnClickListener { onItemClick(item) }
     }
 
