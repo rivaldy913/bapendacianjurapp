@@ -65,35 +65,29 @@
                 android:padding="8dp"
                 android:scaleType="fitCenter"
                 android:src="@drawable/ic_arrow_left_white"
-                android:tint="#AA000000" /> <ImageButton
-            android:id="@+id/btnArrowRight"
-            android:layout_width="56dp"
-            android:layout_height="56dp"
-            android:layout_alignParentEnd="true"
-            android:layout_centerVertical="true"
-            android:background="@android:color/transparent"
-            android:contentDescription="Next News"
-            android:padding="8dp"
-            android:scaleType="fitCenter"
-            android:src="@drawable/ic_arrow_right_white"
-            android:tint="#AA000000" /> </RelativeLayout>
+                android:tint="#AA000000" />
+            <ImageButton
+                android:id="@+id/btnArrowRight"
+                android:layout_width="56dp"
+                android:layout_height="56dp"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:background="@android:color/transparent"
+                android:contentDescription="Next News"
+                android:padding="8dp"
+                android:scaleType="fitCenter"
+                android:src="@drawable/ic_arrow_right_white"
+                android:tint="#AA000000" />
+        </RelativeLayout>
 
-        <com.google.android.material.tabs.TabLayout
-            android:id="@+id/tabLayoutBeritaIndicator"
+        <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="-24dp" app:tabBackground="@drawable/tab_indicator_selector"
-            app:tabGravity="center"
-            app:tabIndicatorHeight="0dp"
-            app:tabMinWidth="0dp" /> <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
-        android:text="Pengumuman"
-        android:textColor="#333333"
-        android:textSize="18sp"
-        android:textStyle="bold" />
+            android:layout_marginTop="24dp"
+            android:text="Pengumuman"
+            android:textColor="#333333"
+            android:textSize="18sp"
+            android:textStyle="bold" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rvPengumuman"
@@ -347,7 +341,8 @@
             android:nestedScrollingEnabled="false"
             tools:listitem="@layout/item_review" />
         <TextView
-            android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:layout_marginTop="24dp"
             android:textAlignment="center"
             android:text="© 2025 Bapenda Kabupaten Cianjur"

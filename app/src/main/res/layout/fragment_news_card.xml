@@ -26,23 +26,6 @@
                 android:src="@drawable/placeholder_news_image"
                 android:contentDescription="Gambar Berita/Pengumuman" />
 
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="bottom|center_horizontal"
-                android:orientation="vertical"
-                android:paddingBottom="4dp"> <com.google.android.material.tabs.TabLayout
-                android:id="@+id/tabLayoutBeritaIndicatorFragment"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                app:tabBackground="@drawable/tab_indicator_selector"
-                app:tabGravity="center"
-                app:tabIndicatorHeight="0dp"
-                app:tabMinWidth="0dp" />
-
-            </LinearLayout>
-
         </FrameLayout>
 
         <TextView

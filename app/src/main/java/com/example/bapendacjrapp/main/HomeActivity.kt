@@ -32,7 +32,7 @@ class HomeActivity : AppCompatActivity() {
     private lateinit var auth: FirebaseAuth
 
     private lateinit var vpBerita: ViewPager2
-    private lateinit var tabLayoutBeritaIndicator: TabLayout
+    // private lateinit var tabLayoutBeritaIndicator: TabLayout // Dihapus
     private lateinit var btnArrowLeft: ImageButton // Deklarasi panah kiri
     private lateinit var btnArrowRight: ImageButton // Deklarasi panah kanan
     private lateinit var rvPengumuman: RecyclerView
@@ -58,7 +58,7 @@ class HomeActivity : AppCompatActivity() {
         val btnSubmitReview = findViewById<Button>(R.id.btnSubmitReview)
 
         vpBerita = findViewById(R.id.vpBerita)
-        tabLayoutBeritaIndicator = findViewById(R.id.tabLayoutBeritaIndicator)
+        // tabLayoutBeritaIndicator = findViewById(R.id.tabLayoutBeritaIndicator) // Dihapus
         btnArrowLeft = findViewById(R.id.btnArrowLeft) // Inisialisasi panah kiri
         btnArrowRight = findViewById(R.id.btnArrowRight) // Inisialisasi panah kanan
         rvPengumuman = findViewById(R.id.rvPengumuman)
@@ -136,10 +136,12 @@ class HomeActivity : AppCompatActivity() {
                 }
                 vpBerita.adapter = NewsPagerAdapter(this, beritaList)
 
-                // Hubungkan TabLayout dengan ViewPager2 untuk indikator
+                // Hubungkan TabLayout dengan ViewPager2 untuk indikator - Dihapus
+                /*
                 TabLayoutMediator(tabLayoutBeritaIndicator, vpBerita) { tab, position ->
                     // Tidak perlu teks untuk tab karena kita pakai drawable sebagai indikator
                 }.attach()
+                */
 
                 // Atur logika panah navigasi
                 updateArrowVisibility(vpBerita.currentItem, beritaList.size)
