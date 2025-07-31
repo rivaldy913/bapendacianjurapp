@@ -26,6 +26,7 @@ import androidx.viewpager2.widget.ViewPager2
 import com.google.firebase.firestore.Query
 import android.widget.ImageButton // Import ImageButton
 import androidx.recyclerview.widget.GridLayoutManager // Import GridLayoutManager
+import com.google.android.material.bottomnavigation.BottomNavigationView // Import BottomNavigationView
 
 class HomeActivity : AppCompatActivity() {
 
@@ -54,6 +55,7 @@ class HomeActivity : AppCompatActivity() {
     private lateinit var ivStrukturOrganisasi: ImageView
     private lateinit var tvTujuanDanFungsiContent: TextView
 
+    private lateinit var bottomNavigationView: BottomNavigationView // Deklarasi BottomNavigationView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -82,16 +84,17 @@ class HomeActivity : AppCompatActivity() {
         rvLayanan = findViewById(R.id.rvLayanan)
         rvReviews = findViewById(R.id.rvReviews)
 
-
-        rvArtikel.layoutManager = LinearLayoutManager(this)
-        rvPimpinan.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
-        rvLayanan.layoutManager = GridLayoutManager(this, 3) // PERUBAHAN DI SINI: Menggunakan GridLayoutManager dengan 3 kolom
-        rvReviews.layoutManager = LinearLayoutManager(this)
-
         tvVisiContent = findViewById(R.id.tvVisiContent)
         tvMisiContent = findViewById(R.id.tvMisiContent)
         ivStrukturOrganisasi = findViewById(R.id.ivStrukturOrganisasi)
         tvTujuanDanFungsiContent = findViewById(R.id.tvTujuanDanFungsiContent)
+
+        bottomNavigationView = findViewById(R.id.bottom_navigation) // Inisialisasi BottomNavigationView
+
+        rvArtikel.layoutManager = LinearLayoutManager(this)
+        rvPimpinan.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
+        rvLayanan.layoutManager = GridLayoutManager(this, 3) // Menggunakan GridLayoutManager dengan 3 kolom
+        rvReviews.layoutManager = LinearLayoutManager(this)
 
 
         btnSubmitReview.setOnClickListener {
@@ -139,6 +142,33 @@ class HomeActivity : AppCompatActivity() {
             val intent = Intent(this, AllArticlesActivity::class.java)
             startActivity(intent)
             Toast.makeText(this, "Membuka halaman daftar semua artikel.", Toast.LENGTH_SHORT).show()
+        }
+
+        // Listener untuk Bottom Navigation Bar
+        bottomNavigationView.setOnItemSelectedListener { item ->
+            when (item.itemId) {
+                R.id.navigation_home -> {
+                    // Konten beranda sudah ditampilkan di aktivitas ini.
+                    // Jika menggunakan fragmen, di sini Anda akan memuat HomeFragment.
+                    Toast.makeText(this, "Anda di halaman Beranda", Toast.LENGTH_SHORT).show()
+                    true
+                }
+                R.id.navigation_layanan -> {
+                    // Arahkan ke aktivitas Layanan atau tampilkan fragmen layanan
+                    // Contoh: val intent = Intent(this, AllServicesActivity::class.java)
+                    // startActivity(intent)
+                    Toast.makeText(this, "Membuka Halaman Layanan", Toast.LENGTH_SHORT).show()
+                    true
+                }
+                R.id.navigation_profile -> {
+                    // Arahkan ke aktivitas EditProfileActivity
+                    val intent = Intent(this, EditProfileActivity::class.java)
+                    startActivity(intent)
+                    Toast.makeText(this, "Membuka Halaman Edit Profil", Toast.LENGTH_SHORT).show()
+                    true
+                }
+                else -> false
+            }
         }
 
         loadBerita()
@@ -374,7 +404,7 @@ class HomeActivity : AppCompatActivity() {
     }
 
     private fun loadBapendaProfileContent() {
-        val pimpinanList = mutableListOf<PimpinanItem>() // Pindahkan deklarasi ke sini
+        val pimpinanList = mutableListOf<PimpinanItem>()
 
         db.collection("bapenda_profile").document("currentProfile")
             .get()
@@ -405,7 +435,7 @@ class HomeActivity : AppCompatActivity() {
                     }
 
                     val pimpinanData = parsePimpinanString(pimpinanListString)
-                    pimpinanList.addAll(pimpinanData) // Tambahkan parsed data ke list
+                    pimpinanList.addAll(pimpinanData)
                     rvPimpinan.adapter = PimpinanAdapter(pimpinanList) { item ->
                         startActivity(Intent(this, DetailActivity::class.java).apply {
                             putExtra("title", item.name)
@@ -433,7 +463,6 @@ class HomeActivity : AppCompatActivity() {
                 rvPimpinan.adapter = PimpinanAdapter(emptyList()) {}
             }
     }
-
 
     private fun parsePimpinanString(pimpinanString: String): List<PimpinanItem> {
         val pimpinanList = mutableListOf<PimpinanItem>()

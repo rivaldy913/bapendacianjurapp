@@ -85,7 +85,12 @@
         </activity>
         <activity
             android:name=".main.AllArticlesActivity"
+            android:exported="false">
+        </activity>
+        <activity
+            android:name=".main.EditProfileActivity"
             android:exported="false"> </activity>
+
     </application>
 
 </manifest>
