@@ -32,10 +32,19 @@ class HomeActivity : AppCompatActivity() {
     private lateinit var auth: FirebaseAuth
 
     private lateinit var vpBerita: ViewPager2
-    // private lateinit var tabLayoutBeritaIndicator: TabLayout // Dihapus
     private lateinit var btnArrowLeft: ImageButton // Deklarasi panah kiri
     private lateinit var btnArrowRight: ImageButton // Deklarasi panah kanan
-    private lateinit var rvPengumuman: RecyclerView
+
+    // Deklarasi baru untuk Pengumuman Carousel
+    private lateinit var vpPengumuman: ViewPager2
+    private lateinit var btnPengumumanArrowLeft: ImageButton
+    private lateinit var btnPengumumanArrowRight: ImageButton
+
+    // Deklarasi tombol "Lihat Selengkapnya"
+    private lateinit var btnLihatSelengkapnyaBerita: Button
+    private lateinit var btnLihatSelengkapnyaPengumuman: Button
+
+    // rvPengumuman sudah dihapus karena diganti ViewPager2
     private lateinit var rvArtikel: RecyclerView
     private lateinit var rvPimpinan: RecyclerView
     private lateinit var rvLayanan: RecyclerView
@@ -58,10 +67,18 @@ class HomeActivity : AppCompatActivity() {
         val btnSubmitReview = findViewById<Button>(R.id.btnSubmitReview)
 
         vpBerita = findViewById(R.id.vpBerita)
-        // tabLayoutBeritaIndicator = findViewById(R.id.tabLayoutBeritaIndicator) // Dihapus
-        btnArrowLeft = findViewById(R.id.btnArrowLeft) // Inisialisasi panah kiri
-        btnArrowRight = findViewById(R.id.btnArrowRight) // Inisialisasi panah kanan
-        rvPengumuman = findViewById(R.id.rvPengumuman)
+        btnArrowLeft = findViewById(R.id.btnArrowLeft)
+        btnArrowRight = findViewById(R.id.btnArrowRight)
+
+        // Inisialisasi ViewPager2 dan ImageButton untuk Pengumuman
+        vpPengumuman = findViewById(R.id.vpPengumuman)
+        btnPengumumanArrowLeft = findViewById(R.id.btnPengumumanArrowLeft)
+        btnPengumumanArrowRight = findViewById(R.id.btnPengumumanArrowRight)
+
+        // Inisialisasi tombol "Lihat Selengkapnya"
+        btnLihatSelengkapnyaBerita = findViewById(R.id.btnLihatSelengkapnyaBerita)
+        btnLihatSelengkapnyaPengumuman = findViewById(R.id.btnLihatSelengkapnyaPengumuman)
+
         rvArtikel = findViewById(R.id.rvArtikel)
         rvPimpinan = findViewById(R.id.rvPimpinan)
         rvLayanan = findViewById(R.id.rvLayanan)
@@ -73,7 +90,6 @@ class HomeActivity : AppCompatActivity() {
         tvTujuanDanFungsiContent = findViewById(R.id.tvTujuanDanFungsiContent)
 
 
-        rvPengumuman.layoutManager = LinearLayoutManager(this)
         rvArtikel.layoutManager = LinearLayoutManager(this)
         rvPimpinan.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
         rvLayanan.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
@@ -108,7 +124,23 @@ class HomeActivity : AppCompatActivity() {
             }
         }
 
-        // Tidak ada lagi tombol btnLihatSelengkapnya
+        // Listener untuk tombol "Lihat Selengkapnya Berita"
+        btnLihatSelengkapnyaBerita.setOnClickListener {
+            // TODO: Anda perlu membuat AllNewsActivity.kt dan activity_all_news.xml
+            // Dan daftarkan AllNewsActivity di AndroidManifest.xml
+            val intent = Intent(this, AllNewsActivity::class.java) //
+            startActivity(intent) //
+            Toast.makeText(this, "Membuka halaman daftar semua berita.", Toast.LENGTH_SHORT).show()
+        }
+
+        // Listener untuk tombol "Lihat Selengkapnya Pengumuman"
+        btnLihatSelengkapnyaPengumuman.setOnClickListener {
+            // TODO: Anda perlu membuat AllAnnouncementsActivity.kt dan activity_all_announcements.xml
+            // Dan daftarkan AllAnnouncementsActivity di AndroidManifest.xml
+            val intent = Intent(this, AllAnnouncementsActivity::class.java) //
+            startActivity(intent) //
+            Toast.makeText(this, "Membuka halaman daftar semua pengumuman.", Toast.LENGTH_SHORT).show()
+        }
 
         loadBerita()
         loadPengumuman()
@@ -136,47 +168,56 @@ class HomeActivity : AppCompatActivity() {
                 }
                 vpBerita.adapter = NewsPagerAdapter(this, beritaList)
 
-                // Hubungkan TabLayout dengan ViewPager2 untuk indikator - Dihapus
-                /*
-                TabLayoutMediator(tabLayoutBeritaIndicator, vpBerita) { tab, position ->
-                    // Tidak perlu teks untuk tab karena kita pakai drawable sebagai indikator
-                }.attach()
-                */
-
-                // Atur logika panah navigasi
-                updateArrowVisibility(vpBerita.currentItem, beritaList.size)
+                updateArrowVisibility(vpBerita.currentItem, beritaList.size, "berita")
 
                 vpBerita.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
                     override fun onPageSelected(position: Int) {
                         super.onPageSelected(position)
-                        updateArrowVisibility(position, beritaList.size)
+                        updateArrowVisibility(position, beritaList.size, "berita")
                     }
                 })
 
                 btnArrowLeft.setOnClickListener {
-                    vpBerita.currentItem = vpBerita.currentItem - 1
+                    if (vpBerita.currentItem > 0) {
+                        vpBerita.currentItem = vpBerita.currentItem - 1
+                    }
                 }
 
                 btnArrowRight.setOnClickListener {
-                    vpBerita.currentItem = vpBerita.currentItem + 1
+                    if (vpBerita.currentItem < beritaList.size - 1) {
+                        vpBerita.currentItem = vpBerita.currentItem + 1
+                    }
                 }
 
             }
             .addOnFailureListener { exception ->
                 Toast.makeText(this, "Error getting news: ${exception.message}", Toast.LENGTH_LONG).show()
                 vpBerita.adapter = NewsPagerAdapter(this, emptyList())
-                updateArrowVisibility(0, 0) // Sembunyikan panah jika tidak ada berita
+                updateArrowVisibility(0, 0, "berita")
             }
     }
 
-    // Fungsi untuk memperbarui visibilitas panah
-    private fun updateArrowVisibility(currentPosition: Int, totalItems: Int) {
-        if (totalItems <= 1) { // Jika hanya ada 0 atau 1 item, sembunyikan kedua panah
-            btnArrowLeft.visibility = View.GONE
-            btnArrowRight.visibility = View.GONE
+    // Fungsi untuk memperbarui visibilitas panah (digeneralisasi)
+    private fun updateArrowVisibility(currentPosition: Int, totalItems: Int, type: String) {
+        val leftButton: ImageButton
+        val rightButton: ImageButton
+
+        if (type == "berita") {
+            leftButton = findViewById(R.id.btnArrowLeft)
+            rightButton = findViewById(R.id.btnArrowRight)
+        } else if (type == "pengumuman") {
+            leftButton = findViewById(R.id.btnPengumumanArrowLeft)
+            rightButton = findViewById(R.id.btnPengumumanArrowRight)
         } else {
-            btnArrowLeft.visibility = if (currentPosition == 0) View.GONE else View.VISIBLE
-            btnArrowRight.visibility = if (currentPosition == totalItems - 1) View.GONE else View.VISIBLE
+            return // Tipe tidak dikenal
+        }
+
+        if (totalItems <= 1) { // Jika hanya ada 0 atau 1 item, sembunyikan kedua panah
+            leftButton.visibility = View.GONE
+            rightButton.visibility = View.GONE
+        } else {
+            leftButton.visibility = if (currentPosition == 0) View.GONE else View.VISIBLE
+            rightButton.visibility = if (currentPosition == totalItems - 1) View.GONE else View.VISIBLE
         }
     }
 
@@ -200,25 +241,35 @@ class HomeActivity : AppCompatActivity() {
                         pengumumanList.add(BeritaPengumumanItem(id, imageUrl, title, date, category, description))
                     }
                 }
-                rvPengumuman.adapter = BeritaPengumumanAdapter(pengumumanList) { item ->
-                    val imageResId = resources.getIdentifier(item.imageUrl, "drawable", packageName)
-                    startActivity(Intent(this, DetailActivity::class.java).apply {
-                        putExtra("title", item.title)
-                        putExtra("content", item.description)
-                        putExtra("image_res_id", if (imageResId != 0) imageResId else R.drawable.placeholder_announcement_image)
-                    })
+                // Menggunakan NewsPagerAdapter untuk Pengumuman
+                vpPengumuman.adapter = NewsPagerAdapter(this, pengumumanList)
+                updateArrowVisibility(vpPengumuman.currentItem, pengumumanList.size, "pengumuman")
+
+                vpPengumuman.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
+                    override fun onPageSelected(position: Int) {
+                        super.onPageSelected(position)
+                        updateArrowVisibility(position, pengumumanList.size, "pengumuman")
+                    }
+                })
+
+                btnPengumumanArrowLeft.setOnClickListener {
+                    if (vpPengumuman.currentItem > 0) {
+                        vpPengumuman.currentItem = vpPengumuman.currentItem - 1
+                    }
+                }
+
+                btnPengumumanArrowRight.setOnClickListener {
+                    if (vpPengumuman.currentItem < pengumumanList.size - 1) {
+                        vpPengumuman.currentItem = vpPengumuman.currentItem + 1
+                    }
                 }
             }
             .addOnFailureListener { exception ->
                 Toast.makeText(this, "Error getting announcements: ${exception.message}", Toast.LENGTH_LONG).show()
+                // Masih tambahkan placeholder jika gagal, agar tampilan tidak kosong
                 pengumumanList.add(BeritaPengumumanItem("p1", "placeholder_announcement_image", "Diskon 50% BPHTB", "16 Jul 2025", "Pengumuman", "Diskon dalam rangka Hari Jadi Cianjur..."))
-                rvPengumuman.adapter = BeritaPengumumanAdapter(pengumumanList) { item ->
-                    startActivity(Intent(this, DetailActivity::class.java).apply {
-                        putExtra("title", item.title)
-                        putExtra("content", item.description)
-                        putExtra("image_res_id", R.drawable.placeholder_announcement_image)
-                    })
-                }
+                vpPengumuman.adapter = NewsPagerAdapter(this, pengumumanList)
+                updateArrowVisibility(0, 0, "pengumuman")
             }
     }
 

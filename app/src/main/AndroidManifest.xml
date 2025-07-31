@@ -75,6 +75,14 @@
             android:exported="false"
             android:theme="@style/Theme.AppCompat.NoActionBar"> </activity>
 
+        <activity
+            android:name=".main.AllNewsActivity"
+            android:exported="false">
+        </activity>
+        <activity
+            android:name=".main.AllAnnouncementsActivity"
+            android:exported="false">
+        </activity>
     </application>
 
 </manifest>

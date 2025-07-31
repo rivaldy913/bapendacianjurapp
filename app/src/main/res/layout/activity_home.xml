@@ -80,6 +80,20 @@
                 android:tint="#AA000000" />
         </RelativeLayout>
 
+        <Button
+            android:id="@+id/btnLihatSelengkapnyaBerita"
+            android:layout_width="wrap_content"
+            android:layout_height="35dp"
+            android:layout_marginTop="16dp"
+            android:background="@drawable/rounded_button_blue_black_text"
+            android:text="LIHAT SELENGKAPNYA"
+            android:textColor="@android:color/black"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            android:elevation="4dp"
+            android:layout_gravity="start"
+            android:paddingStart="18dp"
+            android:paddingEnd="18dp"/>
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -89,15 +103,55 @@
             android:textSize="18sp"
             android:textStyle="bold" />
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rvPengumuman"
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:nestedScrollingEnabled="false"
-            tools:listitem="@layout/item_berita_pengumuman"
-            tools:ignore="MissingConstraints" />
+            android:layout_height="250dp"
+            android:layout_marginTop="8dp">
 
+            <androidx.viewpager2.widget.ViewPager2
+                android:id="@+id/vpPengumuman"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
+            <ImageButton
+                android:id="@+id/btnPengumumanArrowLeft"
+                android:layout_width="56dp"
+                android:layout_height="56dp"
+                android:layout_alignParentStart="true"
+                android:layout_centerVertical="true"
+                android:background="@android:color/transparent"
+                android:contentDescription="Previous Announcement"
+                android:padding="8dp"
+                android:scaleType="fitCenter"
+                android:src="@drawable/ic_arrow_left_white"
+                android:tint="#AA000000" />
+            <ImageButton
+                android:id="@+id/btnPengumumanArrowRight"
+                android:layout_width="56dp"
+                android:layout_height="56dp"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:background="@android:color/transparent"
+                android:contentDescription="Next Announcement"
+                android:padding="8dp"
+                android:scaleType="fitCenter"
+                android:src="@drawable/ic_arrow_right_white"
+                android:tint="#AA000000" />
+        </RelativeLayout>
+        <Button
+            android:id="@+id/btnLihatSelengkapnyaPengumuman"
+            android:layout_width="wrap_content"
+            android:layout_height="35dp"
+            android:layout_marginTop="16dp"
+            android:background="@drawable/rounded_button_blue_black_text"
+            android:text="LIHAT SELENGKAPNYA"
+            android:textColor="@android:color/black"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            android:elevation="4dp"
+            android:layout_gravity="start"
+            android:paddingStart="18dp"
+            android:paddingEnd="18dp"/>
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -321,8 +375,7 @@
             android:text="Kirim Ulasan"
             android:textColor="#FFFFFF"
             android:textSize="18sp"
-            android:textStyle="bold"
-            android:elevation="4dp" />
+            android:textStyle="bold" android:elevation="4dp" />
 
         <TextView
             android:layout_width="wrap_content"
