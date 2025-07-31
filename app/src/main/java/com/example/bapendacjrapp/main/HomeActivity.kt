@@ -25,6 +25,7 @@ import com.google.android.material.tabs.TabLayoutMediator
 import androidx.viewpager2.widget.ViewPager2
 import com.google.firebase.firestore.Query
 import android.widget.ImageButton // Import ImageButton
+import androidx.recyclerview.widget.GridLayoutManager // Import GridLayoutManager
 
 class HomeActivity : AppCompatActivity() {
 
@@ -41,7 +42,7 @@ class HomeActivity : AppCompatActivity() {
 
     private lateinit var btnLihatSelengkapnyaBerita: Button
     private lateinit var btnLihatSelengkapnyaPengumuman: Button
-    private lateinit var btnLihatSelengkapnyaArtikel: Button // Deklarasi tombol baru
+    private lateinit var btnLihatSelengkapnyaArtikel: Button
 
     private lateinit var rvArtikel: RecyclerView
     private lateinit var rvPimpinan: RecyclerView
@@ -74,23 +75,24 @@ class HomeActivity : AppCompatActivity() {
 
         btnLihatSelengkapnyaBerita = findViewById(R.id.btnLihatSelengkapnyaBerita)
         btnLihatSelengkapnyaPengumuman = findViewById(R.id.btnLihatSelengkapnyaPengumuman)
-        btnLihatSelengkapnyaArtikel = findViewById(R.id.btnLihatSelengkapnyaArtikel) // Inisialisasi tombol baru
+        btnLihatSelengkapnyaArtikel = findViewById(R.id.btnLihatSelengkapnyaArtikel)
 
         rvArtikel = findViewById(R.id.rvArtikel)
         rvPimpinan = findViewById(R.id.rvPimpinan)
         rvLayanan = findViewById(R.id.rvLayanan)
         rvReviews = findViewById(R.id.rvReviews)
 
+
+        rvArtikel.layoutManager = LinearLayoutManager(this)
+        rvPimpinan.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
+        rvLayanan.layoutManager = GridLayoutManager(this, 3) // PERUBAHAN DI SINI: Menggunakan GridLayoutManager dengan 3 kolom
+        rvReviews.layoutManager = LinearLayoutManager(this)
+
         tvVisiContent = findViewById(R.id.tvVisiContent)
         tvMisiContent = findViewById(R.id.tvMisiContent)
         ivStrukturOrganisasi = findViewById(R.id.ivStrukturOrganisasi)
         tvTujuanDanFungsiContent = findViewById(R.id.tvTujuanDanFungsiContent)
 
-
-        rvArtikel.layoutManager = LinearLayoutManager(this)
-        rvPimpinan.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
-        rvLayanan.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
-        rvReviews.layoutManager = LinearLayoutManager(this)
 
         btnSubmitReview.setOnClickListener {
             val reviewText = etUserReview.text.toString().trim()
@@ -133,18 +135,15 @@ class HomeActivity : AppCompatActivity() {
             Toast.makeText(this, "Membuka halaman daftar semua pengumuman.", Toast.LENGTH_SHORT).show()
         }
 
-        // Listener untuk tombol "Lihat Selengkapnya Artikel"
         btnLihatSelengkapnyaArtikel.setOnClickListener {
-            // TODO: Anda perlu membuat AllArticlesActivity.kt dan activity_all_articles.xml
-            // Dan daftarkan AllArticlesActivity di AndroidManifest.xml
-            val intent = Intent(this, AllArticlesActivity::class.java) //
-            startActivity(intent) //
+            val intent = Intent(this, AllArticlesActivity::class.java)
+            startActivity(intent)
             Toast.makeText(this, "Membuka halaman daftar semua artikel.", Toast.LENGTH_SHORT).show()
         }
 
         loadBerita()
         loadPengumuman()
-        loadArtikel() // Akan dimodifikasi untuk batasan dan tombol
+        loadArtikel()
         loadLayanan()
         loadReviews()
         loadBapendaProfileContent()
@@ -375,6 +374,8 @@ class HomeActivity : AppCompatActivity() {
     }
 
     private fun loadBapendaProfileContent() {
+        val pimpinanList = mutableListOf<PimpinanItem>() // Pindahkan deklarasi ke sini
+
         db.collection("bapenda_profile").document("currentProfile")
             .get()
             .addOnSuccessListener { document ->
@@ -403,7 +404,8 @@ class HomeActivity : AppCompatActivity() {
                         ivStrukturOrganisasi.setOnClickListener(null)
                     }
 
-                    val pimpinanList = parsePimpinanString(pimpinanListString)
+                    val pimpinanData = parsePimpinanString(pimpinanListString)
+                    pimpinanList.addAll(pimpinanData) // Tambahkan parsed data ke list
                     rvPimpinan.adapter = PimpinanAdapter(pimpinanList) { item ->
                         startActivity(Intent(this, DetailActivity::class.java).apply {
                             putExtra("title", item.name)
@@ -431,6 +433,7 @@ class HomeActivity : AppCompatActivity() {
                 rvPimpinan.adapter = PimpinanAdapter(emptyList()) {}
             }
     }
+
 
     private fun parsePimpinanString(pimpinanString: String): List<PimpinanItem> {
         val pimpinanList = mutableListOf<PimpinanItem>()

@@ -2,7 +2,7 @@
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="120dp"
-    android:layout_height="wrap_content"
+    android:layout_height="120dp"
     android:layout_margin="8dp"
     app:cardCornerRadius="12dp"
     app:cardElevation="4dp">
@@ -11,7 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        android:gravity="center_horizontal"
+        android:gravity="center"
         android:padding="8dp"
         android:background="#FFFFFF">
 
@@ -22,7 +22,8 @@
             android:src="@drawable/placeholder_motorcycle_icon"
             android:contentDescription="Ikon Layanan"
             android:tint="#007BFF"
-            android:layout_marginBottom="4dp" />
+            android:layout_marginBottom="4dp"
+            android:layout_gravity="center_horizontal"/>
 
         <TextView
             android:id="@+id/itemTitle"
@@ -47,5 +48,6 @@
             android:textAlignment="center"
             android:maxLines="3"
             android:ellipsize="end"
-            android:visibility="gone" /> </LinearLayout>
+            android:visibility="gone" />
+    </LinearLayout>
 </androidx.cardview.widget.CardView>
