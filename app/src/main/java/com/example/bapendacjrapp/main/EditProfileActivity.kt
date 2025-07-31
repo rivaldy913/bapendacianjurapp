@@ -10,6 +10,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.bapendacjrapp.MainActivity
 import com.example.bapendacjrapp.R
+import com.google.android.material.bottomnavigation.BottomNavigationView // Import BottomNavigationView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
@@ -22,7 +23,8 @@ class EditProfileActivity : AppCompatActivity() {
     private lateinit var etConfirmNewPassword: EditText
     private lateinit var btnChangePassword: Button
     private lateinit var ivEditProfileBack: ImageView
-    private lateinit var btnLogout: Button // Deklarasi tombol logout
+    private lateinit var btnLogout: Button
+    private lateinit var bottomNavigationView: BottomNavigationView // Deklarasi BottomNavigationView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -35,7 +37,8 @@ class EditProfileActivity : AppCompatActivity() {
         etConfirmNewPassword = findViewById(R.id.etConfirmNewPassword)
         btnChangePassword = findViewById(R.id.btnChangePassword)
         ivEditProfileBack = findViewById(R.id.ivEditProfileBack)
-        btnLogout = findViewById(R.id.btnLogout) // Inisialisasi tombol logout
+        btnLogout = findViewById(R.id.btnLogout)
+        bottomNavigationView = findViewById(R.id.bottom_navigation) // Inisialisasi BottomNavigationView
 
         // Tampilkan email pengguna saat ini
         val user = auth.currentUser
@@ -59,6 +62,32 @@ class EditProfileActivity : AppCompatActivity() {
         // Listener untuk tombol Logout
         btnLogout.setOnClickListener {
             performLogout()
+        }
+
+        // Listener untuk Bottom Navigation Bar
+        bottomNavigationView.setOnItemSelectedListener { item ->
+            when (item.itemId) {
+                R.id.navigation_home -> {
+                    val intent = Intent(this, HomeActivity::class.java)
+                    intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP
+                    startActivity(intent)
+                    true
+                }
+                R.id.navigation_layanan -> {
+                    val intent = Intent(this, HomeActivity::class.java)
+                    intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP
+                    // Jika HomeActivity dapat langsung menampilkan bagian layanan, tambahkan extra
+                    // intent.putExtra("navigateTo", "layanan")
+                    startActivity(intent)
+                    Toast.makeText(this, "Membuka Halaman Layanan", Toast.LENGTH_SHORT).show()
+                    true
+                }
+                R.id.navigation_profile -> {
+                    // Karena sudah di halaman profil, tidak perlu navigasi
+                    true
+                }
+                else -> false
+            }
         }
     }
 
@@ -89,11 +118,10 @@ class EditProfileActivity : AppCompatActivity() {
                         Toast.makeText(this, "Kata sandi berhasil diperbarui!", Toast.LENGTH_LONG).show()
                         etNewPassword.text.clear()
                         etConfirmNewPassword.text.clear()
-                        finish() // Kembali ke halaman sebelumnya setelah sukses
+                        finish()
                     } else {
                         if (task.exception?.message?.contains("requires recent authentication") == true) {
                             Toast.makeText(this, "Sesi login Anda sudah usang. Mohon login ulang untuk mengubah kata sandi.", Toast.LENGTH_LONG).show()
-                            // Arahkan ke halaman login dan bersihkan back stack
                             auth.signOut()
                             val intent = Intent(this, MainActivity::class.java)
                             intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
@@ -107,13 +135,12 @@ class EditProfileActivity : AppCompatActivity() {
     }
 
     private fun performLogout() {
-        auth.signOut() // Melakukan logout dari Firebase
+        auth.signOut()
         Toast.makeText(this, "Anda telah berhasil logout.", Toast.LENGTH_SHORT).show()
 
-        // Arahkan ke MainActivity (halaman login) dan bersihkan back stack
         val intent = Intent(this, MainActivity::class.java)
         intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
         startActivity(intent)
-        finish() // Menutup EditProfileActivity
+        finish()
     }
 }
