@@ -31,7 +31,7 @@ class AdminDashboardActivity : AppCompatActivity() {
         val btnLogout = findViewById<Button>(R.id.btnLogout) // Inisialisasi Button Logout
 
         cardManageNews.setOnClickListener {
-            val intent = Intent(this, AdminNewsInputActivity::class.java)
+            val intent = Intent(this, AdminManageNewsActivity::class.java) // Changed to AdminManageNewsActivity
             startActivity(intent)
         }
 
@@ -60,7 +60,7 @@ class AdminDashboardActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
-        // Listener untuk Button Logout
+        // Listener for Button Logout
         btnLogout.setOnClickListener {
             auth.signOut()
             Toast.makeText(this, "Berhasil logout.", Toast.LENGTH_SHORT).show()

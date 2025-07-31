@@ -91,6 +91,11 @@
             android:name=".main.EditProfileActivity"
             android:exported="false"> </activity>
 
+        <activity
+            android:name=".admin.AdminManageNewsActivity"
+            android:exported="false">
+        </activity>
+
     </application>
 
 </manifest>
