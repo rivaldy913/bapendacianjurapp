@@ -83,6 +83,9 @@
             android:name=".main.AllAnnouncementsActivity"
             android:exported="false">
         </activity>
+        <activity
+            android:name=".main.AllArticlesActivity"
+            android:exported="false"> </activity>
     </application>
 
 </manifest>

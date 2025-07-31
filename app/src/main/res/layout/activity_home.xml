@@ -167,9 +167,22 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:nestedScrollingEnabled="false"
-            tools:listitem="@layout/item_artikel"
-            tools:ignore="MissingConstraints" />
+            tools:listitem="@layout/item_artikel" />
 
+        <Button
+            android:id="@+id/btnLihatSelengkapnyaArtikel"
+            android:layout_width="wrap_content"
+            android:layout_height="35dp"
+            android:layout_marginTop="16dp"
+            android:background="@drawable/rounded_button_blue_black_text"
+            android:text="LIHAT SELENGKAPNYA"
+            android:textColor="@android:color/black"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            android:elevation="4dp"
+            android:layout_gravity="start"
+            android:paddingStart="18dp"
+            android:paddingEnd="18dp"/>
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -185,8 +198,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:nestedScrollingEnabled="false"
-            tools:listitem="@layout/item_layanan"
-            tools:ignore="MissingConstraints" />
+            tools:listitem="@layout/item_layanan" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -212,8 +224,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:nestedScrollingEnabled="false"
-            tools:listitem="@layout/item_pimpinan_bapenda"
-            tools:ignore="MissingConstraints" />
+            tools:listitem="@layout/item_pimpinan_bapenda" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -375,7 +386,8 @@
             android:text="Kirim Ulasan"
             android:textColor="#FFFFFF"
             android:textSize="18sp"
-            android:textStyle="bold" android:elevation="4dp" />
+            android:textStyle="bold"
+            android:elevation="4dp" />
 
         <TextView
             android:layout_width="wrap_content"

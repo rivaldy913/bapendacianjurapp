@@ -32,19 +32,17 @@ class HomeActivity : AppCompatActivity() {
     private lateinit var auth: FirebaseAuth
 
     private lateinit var vpBerita: ViewPager2
-    private lateinit var btnArrowLeft: ImageButton // Deklarasi panah kiri
-    private lateinit var btnArrowRight: ImageButton // Deklarasi panah kanan
+    private lateinit var btnArrowLeft: ImageButton
+    private lateinit var btnArrowRight: ImageButton
 
-    // Deklarasi baru untuk Pengumuman Carousel
     private lateinit var vpPengumuman: ViewPager2
     private lateinit var btnPengumumanArrowLeft: ImageButton
     private lateinit var btnPengumumanArrowRight: ImageButton
 
-    // Deklarasi tombol "Lihat Selengkapnya"
     private lateinit var btnLihatSelengkapnyaBerita: Button
     private lateinit var btnLihatSelengkapnyaPengumuman: Button
+    private lateinit var btnLihatSelengkapnyaArtikel: Button // Deklarasi tombol baru
 
-    // rvPengumuman sudah dihapus karena diganti ViewPager2
     private lateinit var rvArtikel: RecyclerView
     private lateinit var rvPimpinan: RecyclerView
     private lateinit var rvLayanan: RecyclerView
@@ -70,14 +68,13 @@ class HomeActivity : AppCompatActivity() {
         btnArrowLeft = findViewById(R.id.btnArrowLeft)
         btnArrowRight = findViewById(R.id.btnArrowRight)
 
-        // Inisialisasi ViewPager2 dan ImageButton untuk Pengumuman
         vpPengumuman = findViewById(R.id.vpPengumuman)
         btnPengumumanArrowLeft = findViewById(R.id.btnPengumumanArrowLeft)
         btnPengumumanArrowRight = findViewById(R.id.btnPengumumanArrowRight)
 
-        // Inisialisasi tombol "Lihat Selengkapnya"
         btnLihatSelengkapnyaBerita = findViewById(R.id.btnLihatSelengkapnyaBerita)
         btnLihatSelengkapnyaPengumuman = findViewById(R.id.btnLihatSelengkapnyaPengumuman)
+        btnLihatSelengkapnyaArtikel = findViewById(R.id.btnLihatSelengkapnyaArtikel) // Inisialisasi tombol baru
 
         rvArtikel = findViewById(R.id.rvArtikel)
         rvPimpinan = findViewById(R.id.rvPimpinan)
@@ -124,27 +121,30 @@ class HomeActivity : AppCompatActivity() {
             }
         }
 
-        // Listener untuk tombol "Lihat Selengkapnya Berita"
         btnLihatSelengkapnyaBerita.setOnClickListener {
-            // TODO: Anda perlu membuat AllNewsActivity.kt dan activity_all_news.xml
-            // Dan daftarkan AllNewsActivity di AndroidManifest.xml
-            val intent = Intent(this, AllNewsActivity::class.java) //
-            startActivity(intent) //
+            val intent = Intent(this, AllNewsActivity::class.java)
+            startActivity(intent)
             Toast.makeText(this, "Membuka halaman daftar semua berita.", Toast.LENGTH_SHORT).show()
         }
 
-        // Listener untuk tombol "Lihat Selengkapnya Pengumuman"
         btnLihatSelengkapnyaPengumuman.setOnClickListener {
-            // TODO: Anda perlu membuat AllAnnouncementsActivity.kt dan activity_all_announcements.xml
-            // Dan daftarkan AllAnnouncementsActivity di AndroidManifest.xml
-            val intent = Intent(this, AllAnnouncementsActivity::class.java) //
-            startActivity(intent) //
+            val intent = Intent(this, AllAnnouncementsActivity::class.java)
+            startActivity(intent)
             Toast.makeText(this, "Membuka halaman daftar semua pengumuman.", Toast.LENGTH_SHORT).show()
+        }
+
+        // Listener untuk tombol "Lihat Selengkapnya Artikel"
+        btnLihatSelengkapnyaArtikel.setOnClickListener {
+            // TODO: Anda perlu membuat AllArticlesActivity.kt dan activity_all_articles.xml
+            // Dan daftarkan AllArticlesActivity di AndroidManifest.xml
+            val intent = Intent(this, AllArticlesActivity::class.java) //
+            startActivity(intent) //
+            Toast.makeText(this, "Membuka halaman daftar semua artikel.", Toast.LENGTH_SHORT).show()
         }
 
         loadBerita()
         loadPengumuman()
-        loadArtikel()
+        loadArtikel() // Akan dimodifikasi untuk batasan dan tombol
         loadLayanan()
         loadReviews()
         loadBapendaProfileContent()
@@ -197,7 +197,6 @@ class HomeActivity : AppCompatActivity() {
             }
     }
 
-    // Fungsi untuk memperbarui visibilitas panah (digeneralisasi)
     private fun updateArrowVisibility(currentPosition: Int, totalItems: Int, type: String) {
         val leftButton: ImageButton
         val rightButton: ImageButton
@@ -209,10 +208,10 @@ class HomeActivity : AppCompatActivity() {
             leftButton = findViewById(R.id.btnPengumumanArrowLeft)
             rightButton = findViewById(R.id.btnPengumumanArrowRight)
         } else {
-            return // Tipe tidak dikenal
+            return
         }
 
-        if (totalItems <= 1) { // Jika hanya ada 0 atau 1 item, sembunyikan kedua panah
+        if (totalItems <= 1) {
             leftButton.visibility = View.GONE
             rightButton.visibility = View.GONE
         } else {
@@ -229,7 +228,9 @@ class HomeActivity : AppCompatActivity() {
             .get()
             .addOnSuccessListener { result ->
                 if (result.isEmpty) {
-                    pengumumanList.add(BeritaPengumumanItem("p1", "placeholder_announcement_image", "Diskon 50% BPHTB", "16 Jul 2025", "Pengumuman", "Diskon dalam rangka Hari Jadi Cianjur..."))
+                    pengumumanList.add(BeritaPengumumanItem("p1", "placeholder_announcement_image", "Diskon 50% BPHTB", "16 Jul 2025", "Pengumuman", "Diskon dalam rangka Hari Jadi Cianjur dalam rangka Hari Jadi Cianjur..."))
+                    pengumumanList.add(BeritaPengumumanItem("p2", "placeholder_news_image_2", "Pengumuman Penting Lain", "20 Jul 2025", "Pengumuman", "Ada pengumuman penting terbaru untuk seluruh warga Cianjur yang tercinta."))
+                    pengumumanList.add(BeritaPengumumanItem("p3", "ultah_cianjur", "Hari Jadi Cianjur Ke-348", "25 Jul 2025", "Event", "Perayaan Hari Jadi Cianjur dengan berbagai acara menarik!"))
                 } else {
                     for (document in result) {
                         val id = document.id
@@ -241,7 +242,6 @@ class HomeActivity : AppCompatActivity() {
                         pengumumanList.add(BeritaPengumumanItem(id, imageUrl, title, date, category, description))
                     }
                 }
-                // Menggunakan NewsPagerAdapter untuk Pengumuman
                 vpPengumuman.adapter = NewsPagerAdapter(this, pengumumanList)
                 updateArrowVisibility(vpPengumuman.currentItem, pengumumanList.size, "pengumuman")
 
@@ -266,8 +266,8 @@ class HomeActivity : AppCompatActivity() {
             }
             .addOnFailureListener { exception ->
                 Toast.makeText(this, "Error getting announcements: ${exception.message}", Toast.LENGTH_LONG).show()
-                // Masih tambahkan placeholder jika gagal, agar tampilan tidak kosong
                 pengumumanList.add(BeritaPengumumanItem("p1", "placeholder_announcement_image", "Diskon 50% BPHTB", "16 Jul 2025", "Pengumuman", "Diskon dalam rangka Hari Jadi Cianjur..."))
+                pengumumanList.add(BeritaPengumumanItem("p2", "placeholder_news_image_2", "Pengumuman Gagal Muat", "Error", "Pengumuman", "Konten pengumuman gagal dimuat dari server."))
                 vpPengumuman.adapter = NewsPagerAdapter(this, pengumumanList)
                 updateArrowVisibility(0, 0, "pengumuman")
             }
@@ -277,6 +277,7 @@ class HomeActivity : AppCompatActivity() {
         val artikelList = mutableListOf<ArtikelItem>()
         db.collection("articles")
             .orderBy("timestamp", Query.Direction.DESCENDING)
+            .limit(3) // Batasi hingga 3 artikel
             .get()
             .addOnSuccessListener { result ->
                 for (document in result) {
