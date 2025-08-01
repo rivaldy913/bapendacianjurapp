@@ -64,8 +64,8 @@
                         android:layout_width="60dp"
                         android:layout_height="60dp"
                         android:src="@drawable/icon_berita"
-                        android:tint="@color/primaryBlue"
-                        android:contentDescription="Ikon Berita" />
+                        android:contentDescription="Ikon Berita"
+                        app:tint="@color/primaryBlue" />
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -99,8 +99,8 @@
                         android:layout_width="60dp"
                         android:layout_height="60dp"
                         android:src="@drawable/icon_artikel"
-                        android:tint="@color/primaryBlue"
-                        android:contentDescription="Ikon Artikel" />
+                        android:contentDescription="Ikon Artikel"
+                        app:tint="@color/primaryBlue" />
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -135,7 +135,7 @@
                         android:layout_height="60dp"
                         android:src="@drawable/icon_pengumuman"
                         android:contentDescription="Ikon Pengumuman"
-                        android:tint="@color/primaryBlue"/>
+                        app:tint="@color/primaryBlue" />
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -170,8 +170,8 @@
                         android:layout_width="60dp"
                         android:layout_height="60dp"
                         android:src="@drawable/icon_layanan"
-                        android:tint="@color/primaryBlue"
-                        android:contentDescription="Ikon Layanan" />
+                        android:contentDescription="Ikon Layanan"
+                        app:tint="@color/primaryBlue" />
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -205,8 +205,8 @@
                         android:layout_width="60dp"
                         android:layout_height="60dp"
                         android:src="@drawable/placeholder_profile"
-                        android:tint="@color/primaryBlue"
-                        android:contentDescription="Ikon Profil" />
+                        android:contentDescription="Ikon Profil"
+                        app:tint="@color/primaryBlue" />
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -241,8 +241,8 @@
                         android:layout_width="60dp"
                         android:layout_height="60dp"
                         android:src="@drawable/placeholder_edit_profile"
-                        android:tint="@color/primaryBlue"
-                        android:contentDescription="Ikon Edit Profil" />
+                        android:contentDescription="Ikon Edit Profil"
+                        app:tint="@color/primaryBlue" />
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
