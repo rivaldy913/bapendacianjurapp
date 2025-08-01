@@ -10,6 +10,8 @@ import com.example.bapendacjrapp.R
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
+import android.widget.LinearLayout // Impor LinearLayout
+import android.widget.TextView // Impor TextView
 
 class AdminProfileInputActivity : AppCompatActivity() {
 
@@ -21,6 +23,7 @@ class AdminProfileInputActivity : AppCompatActivity() {
     private lateinit var etPimpinanList: EditText
     private lateinit var btnSaveProfile: Button
     private lateinit var ivProfileInputBack: ImageView
+    private lateinit var tvToolbarTitle: TextView // Deklarasi tvToolbarTitle
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -35,6 +38,10 @@ class AdminProfileInputActivity : AppCompatActivity() {
         etPimpinanList = findViewById(R.id.etPimpinanList)
         btnSaveProfile = findViewById(R.id.btnSaveProfile)
         ivProfileInputBack = findViewById(R.id.ivProfileInputBack)
+
+        // Inisialisasi tvToolbarTitle dari LinearLayout toolbar, dengan cast eksplisit
+        tvToolbarTitle = findViewById<LinearLayout>(R.id.profileInputToolbar).findViewById<TextView>(R.id.tvToolbarTitle)
+        tvToolbarTitle.text = "Kelola Profil Bapenda" // Atur judul toolbar
 
         // Muat data profil yang sudah ada (jika ada)
         loadBapendaProfile()
