@@ -36,7 +36,7 @@ class AdminDashboardActivity : AppCompatActivity() {
         }
 
         cardManageArticles.setOnClickListener {
-            val intent = Intent(this, AdminManageArticlesActivity::class.java) // Diubah ke AdminManageArticlesActivity
+            val intent = Intent(this, AdminManageArticlesActivity::class.java)
             startActivity(intent)
         }
 
@@ -46,7 +46,7 @@ class AdminDashboardActivity : AppCompatActivity() {
         }
 
         cardManageServices.setOnClickListener {
-            val intent = Intent(this, AdminServicesInputActivity::class.java)
+            val intent = Intent(this, AdminManageServicesActivity::class.java) // Diubah ke AdminManageServicesActivity
             startActivity(intent)
         }
 

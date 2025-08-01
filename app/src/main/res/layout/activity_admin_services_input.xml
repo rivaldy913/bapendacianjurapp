@@ -28,14 +28,15 @@
             android:focusable="true" />
 
         <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:layout_marginStart="16dp"
-            android:text="Input Layanan Baru"
-            android:textColor="@android:color/white"
-            android:textSize="20sp"
-            android:textStyle="bold" />
+            android:id="@+id/tvToolbarTitle"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:layout_marginStart="16dp"
+        android:text="Input Layanan Baru"
+        android:textColor="@android:color/white"
+        android:textSize="20sp"
+        android:textStyle="bold" />
     </LinearLayout>
 
     <ScrollView
@@ -66,7 +67,8 @@
                 android:id="@+id/etServiceIconResName"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
-                android:layout_marginBottom="12dp" android:background="@drawable/rounded_edittext"
+                android:layout_marginBottom="12dp"
+                android:background="@drawable/rounded_edittext"
                 android:hint="Nama Drawable Ikon (contoh: placeholder_motorcycle_icon)"
                 android:inputType="text"
                 android:paddingStart="16dp"
@@ -76,7 +78,8 @@
                 android:textSize="16sp" />
 
             <EditText
-                android:id="@+id/etServiceDescription" android:layout_width="match_parent"
+                android:id="@+id/etServiceDescription"
+                android:layout_width="match_parent"
                 android:layout_height="120dp"
                 android:layout_marginBottom="24dp"
                 android:background="@drawable/rounded_edittext"
