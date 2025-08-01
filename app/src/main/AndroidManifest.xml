@@ -101,6 +101,11 @@
             android:exported="false">
         </activity>
 
+        <activity
+            android:name=".admin.AdminManageAnnouncementsActivity"
+            android:exported="false">
+        </activity>
+
     </application>
 
 </manifest>
