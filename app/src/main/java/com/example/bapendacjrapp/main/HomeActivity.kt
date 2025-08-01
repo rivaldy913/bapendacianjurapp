@@ -2,31 +2,34 @@ package com.example.bapendacjrapp.main
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.EditText
+import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
-import androidx.cardview.widget.CardView
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.bapendacjrapp.main.*
+import androidx.viewpager2.widget.ViewPager2
+import com.example.bapendacjrapp.MainActivity
 import com.example.bapendacjrapp.R
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import java.util.Date
-import com.google.android.material.tabs.TabLayout
-import com.google.android.material.tabs.TabLayoutMediator
-import androidx.viewpager2.widget.ViewPager2
-import com.google.firebase.firestore.Query
-import android.widget.ImageButton // Import ImageButton
-import androidx.recyclerview.widget.GridLayoutManager // Import GridLayoutManager
-import com.google.android.material.bottomnavigation.BottomNavigationView // Import BottomNavigationView
+
+// Asumsi struktur data model yang Anda miliki
+// Anda perlu memastikan kelas-kelas ini ada dan sesuai dengan data Firestore Anda
+// Contoh: data class BeritaPengumumanItem(...), data class ArtikelItem(...), dll.
 
 class HomeActivity : AppCompatActivity() {
 
@@ -55,7 +58,9 @@ class HomeActivity : AppCompatActivity() {
     private lateinit var ivStrukturOrganisasi: ImageView
     private lateinit var tvTujuanDanFungsiContent: TextView
 
-    private lateinit var bottomNavigationView: BottomNavigationView // Deklarasi BottomNavigationView
+    private lateinit var bottomNavigationView: BottomNavigationView
+    private lateinit var etUserReview: EditText
+    private lateinit var btnSubmitReview: Button
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -64,8 +69,9 @@ class HomeActivity : AppCompatActivity() {
         db = Firebase.firestore
         auth = Firebase.auth
 
-        val etUserReview = findViewById<EditText>(R.id.etUserReview)
-        val btnSubmitReview = findViewById<Button>(R.id.btnSubmitReview)
+        // Inisialisasi View
+        etUserReview = findViewById(R.id.etUserReview)
+        btnSubmitReview = findViewById(R.id.btnSubmitReview)
 
         vpBerita = findViewById(R.id.vpBerita)
         btnArrowLeft = findViewById(R.id.btnArrowLeft)
@@ -89,14 +95,15 @@ class HomeActivity : AppCompatActivity() {
         ivStrukturOrganisasi = findViewById(R.id.ivStrukturOrganisasi)
         tvTujuanDanFungsiContent = findViewById(R.id.tvTujuanDanFungsiContent)
 
-        bottomNavigationView = findViewById(R.id.bottom_navigation) // Inisialisasi BottomNavigationView
+        bottomNavigationView = findViewById(R.id.bottom_navigation)
 
+        // Setup RecyclerViews
         rvArtikel.layoutManager = LinearLayoutManager(this)
         rvPimpinan.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
-        rvLayanan.layoutManager = GridLayoutManager(this, 3) // Menggunakan GridLayoutManager dengan 3 kolom
+        rvLayanan.layoutManager = GridLayoutManager(this, 3)
         rvReviews.layoutManager = LinearLayoutManager(this)
 
-
+        // Listener untuk tombol Kirim Ulasan
         btnSubmitReview.setOnClickListener {
             val reviewText = etUserReview.text.toString().trim()
 
@@ -113,19 +120,21 @@ class HomeActivity : AppCompatActivity() {
                         .addOnSuccessListener {
                             Toast.makeText(this, "Ulasan berhasil dikirim!", Toast.LENGTH_SHORT).show()
                             etUserReview.text.clear()
-                            loadReviews()
+                            loadReviews() // Muat ulang ulasan setelah pengiriman
                         }
                         .addOnFailureListener { e ->
                             Toast.makeText(this, "Gagal: ${e.message}", Toast.LENGTH_LONG).show()
                         }
                 } else {
-                    Toast.makeText(this, "Login dulu untuk kirim ulasan.", Toast.LENGTH_SHORT).show()
+                    // Pengguna belum login, tampilkan dialog
+                    showLoginRequiredDialog("Untuk mengirim ulasan, Anda perlu login terlebih dahulu.")
                 }
             } else {
                 Toast.makeText(this, "Ulasan tidak boleh kosong.", Toast.LENGTH_SHORT).show()
             }
         }
 
+        // Listeners untuk "Lihat Selengkapnya"
         btnLihatSelengkapnyaBerita.setOnClickListener {
             val intent = Intent(this, AllNewsActivity::class.java)
             startActivity(intent)
@@ -149,28 +158,36 @@ class HomeActivity : AppCompatActivity() {
             when (item.itemId) {
                 R.id.navigation_home -> {
                     // Konten beranda sudah ditampilkan di aktivitas ini.
-                    // Jika menggunakan fragmen, di sini Anda akan memuat HomeFragment.
                     Toast.makeText(this, "Anda di halaman Beranda", Toast.LENGTH_SHORT).show()
                     true
                 }
                 R.id.navigation_layanan -> {
-                    // Arahkan ke aktivitas Layanan atau tampilkan fragmen layanan
-                    // Contoh: val intent = Intent(this, AllServicesActivity::class.java)
+                    // Arahkan ke HomeActivity (seperti yang ada di file Anda sebelumnya, atau ke LayananActivity jika ada)
+                    // Jika AllServicesActivity ada, gunakan ini:
+                    // val intent = Intent(this, AllServicesActivity::class.java)
                     // startActivity(intent)
                     Toast.makeText(this, "Membuka Halaman Layanan", Toast.LENGTH_SHORT).show()
+                    // Karena Layanan sudah dimuat di Home, Anda mungkin tidak perlu navigasi ke activity lain
+                    // atau jika ada AllServicesActivity, navigasi ke sana
                     true
                 }
                 R.id.navigation_profile -> {
-                    // Arahkan ke aktivitas EditProfileActivity
-                    val intent = Intent(this, EditProfileActivity::class.java)
-                    startActivity(intent)
-                    Toast.makeText(this, "Membuka Halaman Edit Profil", Toast.LENGTH_SHORT).show()
+                    val currentUser = auth.currentUser
+                    if (currentUser != null) {
+                        // Pengguna sudah login, arahkan ke halaman profil
+                        val intent = Intent(this, EditProfileActivity::class.java)
+                        startActivity(intent)
+                    } else {
+                        // Pengguna belum login, tampilkan dialog
+                        showLoginRequiredDialog("Untuk melihat dan mengedit profil Anda, Anda perlu login terlebih dahulu.")
+                    }
                     true
                 }
                 else -> false
             }
         }
 
+        // Muat data saat aktivitas dibuat
         loadBerita()
         loadPengumuman()
         loadArtikel()
@@ -249,7 +266,6 @@ class HomeActivity : AppCompatActivity() {
         }
     }
 
-
     private fun loadPengumuman() {
         val pengumumanList = mutableListOf<BeritaPengumumanItem>()
         db.collection("announcements")
@@ -257,9 +273,10 @@ class HomeActivity : AppCompatActivity() {
             .get()
             .addOnSuccessListener { result ->
                 if (result.isEmpty) {
-                    pengumumanList.add(BeritaPengumumanItem("p1", "placeholder_announcement_image", "Diskon 50% BPHTB", "16 Jul 2025", "Pengumuman", "Diskon dalam rangka Hari Jadi Cianjur dalam rangka Hari Jadi Cianjur..."))
-                    pengumumanList.add(BeritaPengumumanItem("p2", "placeholder_news_image_2", "Pengumuman Penting Lain", "20 Jul 2025", "Pengumuman", "Ada pengumuman penting terbaru untuk seluruh warga Cianjur yang tercinta."))
-                    pengumumanList.add(BeritaPengumumanItem("p3", "ultah_cianjur", "Hari Jadi Cianjur Ke-348", "25 Jul 2025", "Event", "Perayaan Hari Jadi Cianjur dengan berbagai acara menarik!"))
+                    // Data placeholder jika Firestore kosong
+                    pengumumanList.add(BeritaPengumumanItem("p1", "diskon_bphtb", "Diskon 50% BPHTB", "01 Jul 2025", "Pengumuman", "Diskon dalam rangka Hari Jadi Cianjur Periode 1 Juli s/d 31 Juli 2025."))
+                    pengumumanList.add(BeritaPengumumanItem("p2", "pemutihan_2025", "Pemutihan Pajak Kendaraan Bermotor 2025", "01 Jul 2025", "Pengumuman", "Pemutihan Pajak Kendaraan Bermotor diperpanjang hingga 30 September 2025."))
+                    pengumumanList.add(BeritaPengumumanItem("p3", "ultah_cianjur", "Hari Jadi Cianjur Ke-348", "25 Jul 2025", "Event", "Upacara Perayaan Hari Jadi Cianjur Ke-348."))
                 } else {
                     for (document in result) {
                         val id = document.id
@@ -295,9 +312,10 @@ class HomeActivity : AppCompatActivity() {
             }
             .addOnFailureListener { exception ->
                 Toast.makeText(this, "Error getting announcements: ${exception.message}", Toast.LENGTH_LONG).show()
-                pengumumanList.add(BeritaPengumumanItem("p1", "placeholder_announcement_image", "Diskon 50% BPHTB", "16 Jul 2025", "Pengumuman", "Diskon dalam rangka Hari Jadi Cianjur..."))
-                pengumumanList.add(BeritaPengumumanItem("p2", "placeholder_news_image_2", "Pengumuman Gagal Muat", "Error", "Pengumuman", "Konten pengumuman gagal dimuat dari server."))
-                vpPengumuman.adapter = NewsPagerAdapter(this, pengumumanList)
+                // Tetap tampilkan placeholder jika gagal memuat
+                val defaultPengumumanList = mutableListOf<BeritaPengumumanItem>()
+                defaultPengumumanList.add(BeritaPengumumanItem("p1", "placeholder_announcement_image", "Gagal Memuat Pengumuman", "N/A", "Pengumuman", "Tidak dapat memuat pengumuman dari server."))
+                vpPengumuman.adapter = NewsPagerAdapter(this, defaultPengumumanList)
                 updateArrowVisibility(0, 0, "pengumuman")
             }
     }
@@ -330,6 +348,16 @@ class HomeActivity : AppCompatActivity() {
             }
             .addOnFailureListener { exception ->
                 Toast.makeText(this, "Error getting articles: ${exception.message}", Toast.LENGTH_LONG).show()
+                // Tambahkan placeholder jika gagal
+                val defaultArtikelList = mutableListOf<ArtikelItem>()
+                defaultArtikelList.add(ArtikelItem("a1", "placeholder_article_image", "Gagal Memuat Artikel", "N/A", "Artikel", "Tidak dapat memuat artikel dari server."))
+                rvArtikel.adapter = ArtikelAdapter(defaultArtikelList) { item ->
+                    startActivity(Intent(this, DetailActivity::class.java).apply {
+                        putExtra("title", item.title)
+                        putExtra("content", item.description)
+                        putExtra("image_res_id", R.drawable.placeholder_article_image)
+                    })
+                }
             }
     }
 
@@ -363,10 +391,11 @@ class HomeActivity : AppCompatActivity() {
             }
             .addOnFailureListener { exception ->
                 Toast.makeText(this, "Error getting services: ${exception.message}", Toast.LENGTH_LONG).show()
-                layananList.clear()
-                layananList.add(LayananItem("l1", R.drawable.placeholder_motorcycle_icon, "PKB (Default)", "Deskripsi default PKB."))
-                layananList.add(LayananItem("l2", R.drawable.placeholder_car_icon, "BBNKB (Default)", "Deskripsi default BBNKB."))
-                rvLayanan.adapter = LayananAdapter(layananList) { item ->
+                // Tambahkan placeholder jika gagal
+                val defaultLayananList = mutableListOf<LayananItem>()
+                defaultLayananList.add(LayananItem("l1", R.drawable.placeholder_motorcycle_icon, "PKB (Error)", "Deskripsi default PKB jika gagal dimuat."))
+                defaultLayananList.add(LayananItem("l2", R.drawable.placeholder_car_icon, "BBNKB (Error)", "Deskripsi default BBNKB jika gagal dimuat."))
+                rvLayanan.adapter = LayananAdapter(defaultLayananList) { item ->
                     startActivity(Intent(this, DetailActivity::class.java).apply {
                         putExtra("title", item.title)
                         putExtra("content", item.description)
@@ -400,6 +429,10 @@ class HomeActivity : AppCompatActivity() {
             }
             .addOnFailureListener { exception ->
                 Toast.makeText(this, "Error getting reviews: ${exception.message}", Toast.LENGTH_LONG).show()
+                // Tambahkan placeholder jika gagal
+                val defaultReviewList = mutableListOf<ReviewItem>()
+                defaultReviewList.add(ReviewItem("r1", "admin", "Aplikasi ini bagus sekali!", Date().time))
+                rvReviews.adapter = ReviewAdapter(defaultReviewList)
             }
     }
 
@@ -479,10 +512,26 @@ class HomeActivity : AppCompatActivity() {
                 if (imageResId != 0) {
                     pimpinanList.add(PimpinanItem(id, imageResId, name, position))
                 } else {
+                    // Gunakan placeholder default jika gambar tidak ditemukan
                     pimpinanList.add(PimpinanItem(id, R.drawable.placeholder_pimpinan_1, name, position))
                 }
             }
         }
         return pimpinanList
+    }
+
+    private fun showLoginRequiredDialog(message: String) {
+        AlertDialog.Builder(this)
+            .setTitle("Login Diperlukan")
+            .setMessage(message)
+            .setPositiveButton("Login Sekarang") { dialog, _ ->
+                val intent = Intent(this, MainActivity::class.java)
+                startActivity(intent)
+                dialog.dismiss()
+            }
+            .setNegativeButton("Batal") { dialog, _ ->
+                dialog.dismiss()
+            }
+            .show()
     }
 }

@@ -1,4 +1,3 @@
-// --- MainActivity.kt ---
 package com.example.bapendacjrapp
 
 import android.content.Intent
@@ -66,12 +65,17 @@ class MainActivity : AppCompatActivity() {
                                 }
                                 .addOnFailureListener { e ->
                                     Toast.makeText(this, "Gagal mengambil data peran: ${e.message}", Toast.LENGTH_LONG).show()
+                                    // Jika gagal ambil peran, tetap arahkan ke HomeActivity sebagai pengguna biasa
                                     val intent = Intent(this, HomeActivity::class.java)
                                     startActivity(intent)
                                     finish()
                                 }
                         } else {
                             Toast.makeText(this, "Login berhasil, tapi pengguna tidak ditemukan.", Toast.LENGTH_SHORT).show()
+                            // Jika user null setelah login berhasil (kasus jarang), arahkan ke HomeActivity
+                            val intent = Intent(this, HomeActivity::class.java)
+                            startActivity(intent)
+                            finish()
                         }
                     } else {
                         Toast.makeText(this, "Login gagal: ${task.exception?.message}", Toast.LENGTH_LONG).show()
