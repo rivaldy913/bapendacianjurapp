@@ -63,7 +63,7 @@
                     <ImageView
                         android:layout_width="60dp"
                         android:layout_height="60dp"
-                        android:src="@drawable/placeholder_news"
+                        android:src="@drawable/icon_berita"
                         android:tint="@color/primaryBlue"
                         android:contentDescription="Ikon Berita" />
                     <TextView
@@ -98,7 +98,7 @@
                     <ImageView
                         android:layout_width="60dp"
                         android:layout_height="60dp"
-                        android:src="@drawable/placeholder_article"
+                        android:src="@drawable/icon_artikel"
                         android:tint="@color/primaryBlue"
                         android:contentDescription="Ikon Artikel" />
                     <TextView
@@ -133,9 +133,9 @@
                     <ImageView
                         android:layout_width="60dp"
                         android:layout_height="60dp"
-                        android:src="@drawable/placeholder_announcement_image"
+                        android:src="@drawable/icon_pengumuman"
                         android:contentDescription="Ikon Pengumuman"
-                        android:tint="@null"/>
+                        android:tint="@color/primaryBlue"/>
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -169,7 +169,7 @@
                     <ImageView
                         android:layout_width="60dp"
                         android:layout_height="60dp"
-                        android:src="@drawable/placeholder_home_icon"
+                        android:src="@drawable/icon_layanan"
                         android:tint="@color/primaryBlue"
                         android:contentDescription="Ikon Layanan" />
                     <TextView
