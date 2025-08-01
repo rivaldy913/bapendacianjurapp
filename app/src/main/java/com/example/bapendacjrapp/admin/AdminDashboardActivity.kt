@@ -2,7 +2,7 @@ package com.example.bapendacjrapp.admin
 
 import android.content.Intent
 import android.os.Bundle
-import android.widget.Button // Import Button
+import android.widget.Button // Impor Button
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.cardview.widget.CardView
@@ -28,15 +28,15 @@ class AdminDashboardActivity : AppCompatActivity() {
         val cardManageServices = findViewById<CardView>(R.id.cardManageServices)
         val cardManageProfile = findViewById<CardView>(R.id.cardManageProfile)
         val cardEditAdminProfile = findViewById<CardView>(R.id.cardEditAdminProfile)
-        val btnLogout = findViewById<Button>(R.id.btnLogout) // Inisialisasi Button Logout
+        val btnLogout = findViewById<Button>(R.id.btnLogout) // Inisialisasi Tombol Logout
 
         cardManageNews.setOnClickListener {
-            val intent = Intent(this, AdminManageNewsActivity::class.java) // Changed to AdminManageNewsActivity
+            val intent = Intent(this, AdminManageNewsActivity::class.java)
             startActivity(intent)
         }
 
         cardManageArticles.setOnClickListener {
-            val intent = Intent(this, AdminArticleInputActivity::class.java)
+            val intent = Intent(this, AdminManageArticlesActivity::class.java) // Diubah ke AdminManageArticlesActivity
             startActivity(intent)
         }
 
@@ -60,7 +60,7 @@ class AdminDashboardActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
-        // Listener for Button Logout
+        // Listener untuk Tombol Logout
         btnLogout.setOnClickListener {
             auth.signOut()
             Toast.makeText(this, "Berhasil logout.", Toast.LENGTH_SHORT).show()

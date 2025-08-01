@@ -96,6 +96,11 @@
             android:exported="false">
         </activity>
 
+        <activity
+            android:name=".admin.AdminManageArticlesActivity"
+            android:exported="false">
+        </activity>
+
     </application>
 
 </manifest>
