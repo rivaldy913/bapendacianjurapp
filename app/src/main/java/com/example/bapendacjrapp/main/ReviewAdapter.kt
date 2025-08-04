@@ -1,4 +1,3 @@
-// ReviewAdapter.kt
 package com.example.bapendacjrapp.main
 
 import android.view.LayoutInflater
@@ -28,11 +27,10 @@ class ReviewAdapter(private val items: List<ReviewItem>) :
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = items[position]
-        // Anda mungkin ingin menampilkan nama pengguna daripada ID di masa depan
-        holder.reviewerIdView.text = "Pengguna (ID: ${item.userId.substring(0, 4)}...)" // Menampilkan sebagian ID
+        // Menggunakan userName (nama lengkap) untuk ditampilkan
+        holder.reviewerIdView.text = item.userName
         holder.reviewContentView.text = item.reviewText
 
-        // Format timestamp menjadi tanggal yang mudah dibaca
         val dateFormat = SimpleDateFormat("dd MMM yyyy, HH:mm", Locale("id", "ID"))
         holder.reviewDateView.text = dateFormat.format(Date(item.timestamp))
     }

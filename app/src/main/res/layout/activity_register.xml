@@ -66,10 +66,24 @@
                 android:textAlignment="center" />
 
             <EditText
-                android:id="@+id/etRegisterEmail"
+                android:id="@+id/etFullName"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:layout_marginTop="32dp"
+                android:background="@drawable/rounded_edittext"
+                android:hint="Nama Lengkap"
+                android:inputType="textCapWords"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                android:textColor="#333333"
+                android:textColorHint="#999999"
+                android:textSize="16sp" />
+
+            <EditText
+                android:id="@+id/etRegisterEmail"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginTop="16dp"
                 android:background="@drawable/rounded_edittext"
                 android:hint="Email"
                 android:inputType="textEmailAddress"
@@ -146,6 +160,7 @@
                 android:textSize="14sp"
                 android:clickable="true"
                 android:focusable="true"
-                /> </LinearLayout>
+                />
+        </LinearLayout>
     </ScrollView>
 </RelativeLayout>

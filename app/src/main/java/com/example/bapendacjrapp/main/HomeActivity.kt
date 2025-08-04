@@ -26,6 +26,8 @@ import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import java.util.Date
+import kotlinx.coroutines.* // NEW: Import untuk coroutine
+import kotlinx.coroutines.tasks.await
 
 // Asumsi struktur data model yang Anda miliki
 // Anda perlu memastikan kelas-kelas ini ada dan sesuai dengan data Firestore Anda
@@ -61,6 +63,9 @@ class HomeActivity : AppCompatActivity() {
     private lateinit var bottomNavigationView: BottomNavigationView
     private lateinit var etUserReview: EditText
     private lateinit var btnSubmitReview: Button
+
+    // NEW: Scope untuk coroutine
+    private val coroutineScope = CoroutineScope(Dispatchers.Main + Job())
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -192,8 +197,13 @@ class HomeActivity : AppCompatActivity() {
         loadPengumuman()
         loadArtikel()
         loadLayanan()
-        loadReviews()
+        loadReviews() // Memuat ulasan dengan nama lengkap
         loadBapendaProfileContent()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        coroutineScope.cancel() // Batalkan semua coroutine saat aktivitas dihancurkan
     }
 
     private fun loadBerita() {
@@ -406,16 +416,35 @@ class HomeActivity : AppCompatActivity() {
     }
 
     private fun loadReviews() {
-        val reviewList = mutableListOf<ReviewItem>()
-        db.collection("reviews")
-            .orderBy("timestamp", Query.Direction.DESCENDING)
-            .limit(5)
-            .get()
-            .addOnSuccessListener { result ->
+        // Hapus kode lama
+        // rvReviews.adapter = ReviewAdapter(reviewList)
+
+        coroutineScope.launch { // Menggunakan coroutine untuk menangani panggilan Firestore asinkron
+            val rawReviewList = mutableListOf<ReviewItem>()
+            try {
+                val result = db.collection("reviews")
+                    .orderBy("timestamp", Query.Direction.DESCENDING)
+                    .limit(5)
+                    .get().await() // Menggunakan await() untuk mendapatkan hasil secara asinkron
+
+                // Kumpulkan semua ID pengguna dari ulasan
+                val userIds = result.map { it.getString("userId") }.filterNotNull().distinct()
+
+                // Ambil semua nama pengguna dalam satu panggilan (atau batched jika terlalu banyak)
+                val userNamesMap = mutableMapOf<String, String>()
+                if (userIds.isNotEmpty()) {
+                    for (userId in userIds) {
+                        val userDoc = db.collection("users").document(userId).get().await()
+                        val fullName = userDoc.getString("fullName") ?: "Pengguna Anonim" // Default jika nama tidak ditemukan
+                        userNamesMap[userId] = fullName
+                    }
+                }
+
                 for (document in result) {
                     val id = document.id
                     val userId = document.getString("userId") ?: "Anonim"
                     val reviewText = document.getString("reviewText") ?: ""
+                    val userName = userNamesMap[userId] ?: "Pengguna Anonim" // Dapatkan nama dari map
 
                     val timestamp: Long = when (val rawTimestamp = document.get("timestamp")) {
                         is com.google.firebase.Timestamp -> rawTimestamp.toDate().time
@@ -423,18 +452,20 @@ class HomeActivity : AppCompatActivity() {
                         else -> 0L
                     }
 
-                    reviewList.add(ReviewItem(id, userId, reviewText, timestamp))
+                    rawReviewList.add(ReviewItem(id, userId, userName, reviewText, timestamp))
                 }
-                rvReviews.adapter = ReviewAdapter(reviewList)
-            }
-            .addOnFailureListener { exception ->
-                Toast.makeText(this, "Error getting reviews: ${exception.message}", Toast.LENGTH_LONG).show()
-                // Tambahkan placeholder jika gagal
+                rvReviews.adapter = ReviewAdapter(rawReviewList)
+
+            } catch (e: Exception) {
+                Toast.makeText(this@HomeActivity, "Error getting reviews: ${e.message}", Toast.LENGTH_LONG).show()
                 val defaultReviewList = mutableListOf<ReviewItem>()
-                defaultReviewList.add(ReviewItem("r1", "admin", "Aplikasi ini bagus sekali!", Date().time))
+                // Menggunakan "Pengguna Anonim" sebagai placeholder nama
+                defaultReviewList.add(ReviewItem("r1", "defaultUser", "Pengguna Anonim", "Gagal memuat ulasan. Ini ulasan default.", Date().time))
                 rvReviews.adapter = ReviewAdapter(defaultReviewList)
             }
+        }
     }
+
 
     private fun loadBapendaProfileContent() {
         val pimpinanList = mutableListOf<PimpinanItem>()

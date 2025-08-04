@@ -6,10 +6,10 @@ import android.os.Bundle
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
-import android.widget.TextView // Import TextView
+import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import com.example.bapendacjrapp.MainActivity // Import MainActivity
+import com.example.bapendacjrapp.MainActivity
 import com.example.bapendacjrapp.R
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
@@ -22,7 +22,8 @@ class RegisterActivity : AppCompatActivity() {
 
     private lateinit var auth: FirebaseAuth
     private lateinit var db: FirebaseFirestore
-    private lateinit var tvLoginHere: TextView // Deklarasi TextView
+    private lateinit var tvLoginHere: TextView
+    private lateinit var etFullName: EditText // Deklarasi EditText baru untuk nama lengkap
 
     @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -32,21 +33,22 @@ class RegisterActivity : AppCompatActivity() {
         auth = Firebase.auth
         db = Firebase.firestore
 
+        etFullName = findViewById(R.id.etFullName) // Inisialisasi EditText nama lengkap
         val etEmail = findViewById<EditText>(R.id.etRegisterEmail)
         val etPassword = findViewById<EditText>(R.id.etRegisterPassword)
         val etConfirmPassword = findViewById<EditText>(R.id.etRegisterConfirmPassword)
         val btnRegister = findViewById<Button>(R.id.btnRegisterAccount)
         val ivBack = findViewById<ImageView>(R.id.ivRegisterBack)
 
-        // Pastikan inisialisasi ini benar:
-        tvLoginHere = findViewById(R.id.tvLoginHere) // Ini baris yang menyebabkan error jika salah nama
+        tvLoginHere = findViewById(R.id.tvLoginHere)
 
         btnRegister.setOnClickListener {
+            val fullName = etFullName.text.toString().trim() // Ambil nama lengkap
             val email = etEmail.text.toString().trim()
             val password = etPassword.text.toString().trim()
             val confirmPassword = etConfirmPassword.text.toString().trim()
 
-            if (email.isEmpty() || password.isEmpty() || confirmPassword.isEmpty()) {
+            if (fullName.isEmpty() || email.isEmpty() || password.isEmpty() || confirmPassword.isEmpty()) { // Validasi nama lengkap
                 Toast.makeText(this, "Mohon isi semua kolom.", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
@@ -68,6 +70,7 @@ class RegisterActivity : AppCompatActivity() {
                         if (userId != null) {
                             val user = hashMapOf(
                                 "email" to email,
+                                "fullName" to fullName, // Simpan nama lengkap ke Firestore
                                 "role" to "user",
                                 "createdAt" to Date()
                             )

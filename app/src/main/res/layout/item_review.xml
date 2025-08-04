@@ -18,8 +18,7 @@
             android:id="@+id/tvReviewerId"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Pengguna (ID: user123)"
-            android:textColor="#333333"
+            android:text="Nama Pengguna"  android:textColor="#333333"
             android:textSize="14sp"
             android:textStyle="bold" />
 
