@@ -275,7 +275,9 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="4dp"
                         android:text="Mewujudkan pengelolaan pendapatan daerah yang transparan, akuntabel, dan profesional untuk kesejahteraan masyarakat Cianjur."
-                        android:textColor="#666666" />
+                        android:textColor="#666666"
+                        android:justificationMode="inter_word"
+                        />
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -292,7 +294,9 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="4dp"
                         android:text="1. Meningkatkan kualitas pelayanan perpajakan daerah.\n2. Mengoptimalkan penerimaan pendapatan daerah.\n3. Mengembangkan sistem informasi pengelolaan pendapatan daerah yang terintegrasi."
-                        android:textColor="#666666" />
+                        android:textColor="#666666"
+                        android:justificationMode="inter_word"
+                        />
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
 
@@ -365,7 +369,9 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Melaksanakan urusan pemerintahan di bidang pengelolaan keuangan dan pendapatan daerah berdasarkan asas otonomi daerah dan tugas pembantuan."
-                        android:textColor="#666666" />
+                        android:textColor="#666666"
+                        android:justificationMode="inter_word"
+                        />
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
 
@@ -442,4 +448,5 @@
         app:menu="@menu/bottom_nav_menu"
         app:itemIconTint="@color/primaryBlue"
         app:itemTextColor="@color/primaryBlue"
-        app:labelVisibilityMode="unlabeled" /> </LinearLayout>
+        app:labelVisibilityMode="unlabeled" />
+</LinearLayout>
